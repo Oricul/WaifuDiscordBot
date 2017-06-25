@@ -79,7 +79,11 @@ class Twitter():
         self.bot = bot
         print(TwitterLogin())
         print(SQLSetup())
-        self.bot.loop.call_soon(self.readyupdatecheck)
+        try:
+            thread.start_new_thread(self.bot.loop.call_soon(self.readyupdatecheck),("Thread-1",2, ))
+        except:
+            exit("Failed to start Twitter update check thread.")
+        #self.bot.loop.call_soon(self.readyupdatecheck)
 
     def readyupdatecheck(self):
         self.bot.loop.create_task(self.sendupdatecheck())
