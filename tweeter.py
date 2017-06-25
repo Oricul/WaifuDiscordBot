@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import asyncio, datetime, discord, discord.utils, json, linecache, pytz, sys, time, twitter
+import asyncio, datetime, discord, discord.utils, json, linecache, pytz, sys, thread, twitter
 from discord.ext import commands
 from printoverride import print
 import MySQLdb as MS
