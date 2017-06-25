@@ -80,58 +80,60 @@ class Twitter():
         print(TwitterLogin())
         print(SQLSetup())
         try:
-            threading._start_new_thread(self.bot.loop.call_soon(self.readyupdatecheck),("Thread-1",2, ))
+            threading._start_new_thread(self.readyupdatecheck,("Thread-1",2, ))
         except:
             exit("Failed to start Twitter update check thread.")
         #self.bot.loop.call_soon(self.readyupdatecheck)
 
-    def readyupdatecheck(self):
-        self.bot.loop.create_task(self.sendupdatecheck())
+    #def readyupdatecheck(self):
+    #    self.bot.loop.create_task(self.sendupdatecheck())
 
     def sendupdatecheck(self):
         global twitdelay
-        try:
-            sqldb1 = MS.connect(host=sqlHost,user=sqlUser,passwd=sqlPass,db=dbname1)
-            cur1 = sqldb1.cursor()
-            cur1.execute("select username,lasttweet,serverid from {0}".format(tblname1))
-            cur2 = sqldb1.cursor()
-            cur2.execute("select channelid from {0}".format(tblname2))
-            cur3 = sqldb1.cursor()
-            for username,tweetdate,serverid in cur1:
-                status = twitapi.GetUserTimeline(screen_name=username,count=200,include_rts=False,exclude_replies=True)
-                preConvTwitTime = datetime.datetime.strptime(status[0].created_at,"%a %b %d %H:%M:%S %z %Y").replace(tzinfo = pytz.FixedOffset(+0000)).astimezone(pytz.timezone('America/New_York'))
-                convTwitTime = datetime.datetime.strftime(preConvTwitTime,"%Y-%m-%d %H:%M:%S")
-                if str(tweetdate) != str(convTwitTime):
-                    cur3.execute("update {0} set lasttweet='{1}' where username='{2}';".format(tblname1,convTwitTime,username))
-                    convTwitTime = datetime.datetime.strftime(preConvTwitTime,"%a, %b %d, %Y %I:%M:%S %p")
-                    readyit = discord.Embed(title="{0} (@{1})".format(status[0].user.name,status[0].user.screen_name),colour=int(hex(int(status[0].user.profile_background_color,16)),16), \
-                                            url="https://www.twitter.com/{0}/status/{1}".format(status[0].user.screen_name,status[0].id_str), description="{0}".format(status[0].text))
-                    readyit.set_thumbnail(url=status[0].user.profile_image_url)
-                    readyit.set_footer(text="\U0001F4E2 {0} \U00002764 {1} | {2}".format(status[0].retweet_count,status[0].favorite_count,convTwitTime))
-                    try:
-                        for entry in status[0].media:
-                            if entry.type == "photo":
-                                readyit.set_image(url=entry.media_url)
-                    except:
-                        pass
-                    for server in self.bot.servers:
-                        for channel in server.channels:
-                            for row in cur2:
-                                for postchanid in row:
-                                    if str(server.id) == str(serverid) and str(channel.id) == str(postchanid):
-                                        sendit = self.bot.send_message(discord.Object(id=postchanid),embed=readyit)
-                                        asyncio.sleep(3.5)
-            sqldb1.commit()
-        except Exception as e:
-            error = ReportException()
-            if 'Over capacity' in error:
-                twitdelay += 10
-                self.bot.send_message(discord.Object(id=289158431213092865),"`Twitter: Woops! Rate limit reached. Increasing delay from {0} to {1}.`".format(twitdelay-10,twitdelay))
-                print("Twitter: Rate limit reached, increased to {0}.".format(twitdelay))
-            else:
-                self.bot.send_message(discord.Object(id=289158431213092865),"{0}".format(error))
-                self.bot.send_message(discord.Object(id=289158431213092865),"{0}".format(e))
-        self.bot.loop.call_later(twitdelay,self.readyupdatecheck)
+        while True:
+            try:
+                sqldb1 = MS.connect(host=sqlHost,user=sqlUser,passwd=sqlPass,db=dbname1)
+                cur1 = sqldb1.cursor()
+                cur1.execute("select username,lasttweet,serverid from {0}".format(tblname1))
+                cur2 = sqldb1.cursor()
+                cur2.execute("select channelid from {0}".format(tblname2))
+                cur3 = sqldb1.cursor()
+                for username,tweetdate,serverid in cur1:
+                    status = twitapi.GetUserTimeline(screen_name=username,count=200,include_rts=False,exclude_replies=True)
+                    preConvTwitTime = datetime.datetime.strptime(status[0].created_at,"%a %b %d %H:%M:%S %z %Y").replace(tzinfo = pytz.FixedOffset(+0000)).astimezone(pytz.timezone('America/New_York'))
+                    convTwitTime = datetime.datetime.strftime(preConvTwitTime,"%Y-%m-%d %H:%M:%S")
+                    if str(tweetdate) != str(convTwitTime):
+                        cur3.execute("update {0} set lasttweet='{1}' where username='{2}';".format(tblname1,convTwitTime,username))
+                        convTwitTime = datetime.datetime.strftime(preConvTwitTime,"%a, %b %d, %Y %I:%M:%S %p")
+                        readyit = discord.Embed(title="{0} (@{1})".format(status[0].user.name,status[0].user.screen_name),colour=int(hex(int(status[0].user.profile_background_color,16)),16), \
+                                                url="https://www.twitter.com/{0}/status/{1}".format(status[0].user.screen_name,status[0].id_str), description="{0}".format(status[0].text))
+                        readyit.set_thumbnail(url=status[0].user.profile_image_url)
+                        readyit.set_footer(text="\U0001F4E2 {0} \U00002764 {1} | {2}".format(status[0].retweet_count,status[0].favorite_count,convTwitTime))
+                        try:
+                            for entry in status[0].media:
+                                if entry.type == "photo":
+                                    readyit.set_image(url=entry.media_url)
+                        except:
+                            pass
+                        for server in self.bot.servers:
+                            for channel in server.channels:
+                                for row in cur2:
+                                    for postchanid in row:
+                                        if str(server.id) == str(serverid) and str(channel.id) == str(postchanid):
+                                            sendit = self.bot.send_message(discord.Object(id=postchanid),embed=readyit)
+                                            asyncio.sleep(3.5)
+                sqldb1.commit()
+            except Exception as e:
+                error = ReportException()
+                if 'Over capacity' in error:
+                    twitdelay += 10
+                    self.bot.send_message(discord.Object(id=289158431213092865),"`Twitter: Woops! Rate limit reached. Increasing delay from {0} to {1}.`".format(twitdelay-10,twitdelay))
+                    print("Twitter: Rate limit reached, increased to {0}.".format(twitdelay))
+                else:
+                    self.bot.send_message(discord.Object(id=289158431213092865),"{0}".format(error))
+                    self.bot.send_message(discord.Object(id=289158431213092865),"{0}".format(e))
+            asyncio.sleep(twitdelay)
+        #self.bot.loop.call_later(twitdelay,self.readyupdatecheck)
 
     @commands.command(pass_context=True,hidden=True)
     @is_owner()
