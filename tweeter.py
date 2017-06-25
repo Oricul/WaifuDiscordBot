@@ -80,7 +80,7 @@ class Twitter():
         print(TwitterLogin())
         print(SQLSetup())
         try:
-            threading.start_new_thread(self.bot.loop.call_soon(self.readyupdatecheck),("Thread-1",2, ))
+            threading._start_new_thread(self.bot.loop.call_soon(self.readyupdatecheck),("Thread-1",2, ))
         except:
             exit("Failed to start Twitter update check thread.")
         #self.bot.loop.call_soon(self.readyupdatecheck)
