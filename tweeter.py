@@ -75,13 +75,14 @@ def is_owner():
     return commands.check(lambda ctx: is_owner_check(ctx.message))
 #----------------------------------------------------------------------------------------------------
 class myThread(threading.Thread):
-    def __init__(self,threadID):
+    def __init__(self,threadID,twitself):
         threading.Thread.__init__(self)
         self.threadID = threadID
+        self.twitself = twitself
 
     def run(self):
         print("Twitter: Starting thread.")
-        Twitter.sendupdatecheck()
+        Twitter.sendupdatecheck(self.twitself)
 
 class Twitter():
     def __init__(self,bot):
@@ -89,7 +90,7 @@ class Twitter():
         print(TwitterLogin())
         print(SQLSetup())
         try:
-            thread1 = myThread(1)
+            thread1 = myThread(1,self)
             thread1.start()
             #threading._start_new_thread(self.sendupdatecheck(), ("Thread-1", 2,))
         except:
