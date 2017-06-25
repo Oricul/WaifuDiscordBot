@@ -88,7 +88,7 @@ class Twitter():
     def readyupdatecheck(self):
         self.bot.loop.create_task(self.sendupdatecheck())
 
-    async def sendupdatecheck(self):
+    def sendupdatecheck(self):
         global twitdelay
         try:
             sqldb1 = MS.connect(host=sqlHost,user=sqlUser,passwd=sqlPass,db=dbname1)
