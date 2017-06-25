@@ -82,7 +82,7 @@ class myThread(threading.Thread):
 
     def run(self):
         print("Twitter: Starting thread.")
-        Twitter.sendupdatecheck(self.twitself)
+        Twitter.sendupdatecheck(self)
 
 class Twitter():
     def __init__(self,bot):
