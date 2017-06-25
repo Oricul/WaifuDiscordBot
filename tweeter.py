@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import asyncio, datetime, discord, discord.utils, json, linecache, pytz, sys, thread, twitter
+import asyncio, datetime, discord, discord.utils, json, linecache, pytz, sys, threading, twitter
 from discord.ext import commands
 from printoverride import print
 import MySQLdb as MS
@@ -80,7 +80,7 @@ class Twitter():
         print(TwitterLogin())
         print(SQLSetup())
         try:
-            thread.start_new_thread(self.bot.loop.call_soon(self.readyupdatecheck),("Thread-1",2, ))
+            threading.start_new_thread(self.bot.loop.call_soon(self.readyupdatecheck),("Thread-1",2, ))
         except:
             exit("Failed to start Twitter update check thread.")
         #self.bot.loop.call_soon(self.readyupdatecheck)
