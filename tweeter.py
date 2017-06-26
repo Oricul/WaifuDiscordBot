@@ -93,7 +93,7 @@ class Twitter():
                 cur2.execute("select channelid from {0}".format(tblname2))
                 cur3 = sqldb1.cursor()
                 for username,tweetdate,serverid in cur1:
-                    status = await twitapi.GetUserTimeline(screen_name=username,count=200,include_rts=False,exclude_replies=True)
+                    status = twitapi.GetUserTimeline(screen_name=username,count=200,include_rts=False,exclude_replies=True)
                     preConvTwitTime = datetime.datetime.strptime(status[0].created_at,"%a %b %d %H:%M:%S %z %Y").replace(tzinfo = pytz.FixedOffset(+0000)).astimezone(pytz.timezone('America/New_York'))
                     convTwitTime = datetime.datetime.strftime(preConvTwitTime,"%Y-%m-%d %H:%M:%S")
                     if str(tweetdate) != str(convTwitTime):
