@@ -23,7 +23,6 @@ twitapi = twitter.Api(consumer_key=consumerkey,
           consumer_secret=consumersecret,
           access_token_key=accesstokenkey,
           access_token_secret=accesstokensecret)
-twitdelay = 60
 #----------------------------------------------------------------------------------------------------
 def ReportException():
     exc_type, exc_obj, tb = sys.exc_info()
@@ -94,7 +93,8 @@ class Twitter():
                 cur3 = sqldb1.cursor()
                 cur4 = sqldb1.cursor()
                 cur4.execute("select count(*) from {0}".format(tblname1))
-                await self.bot.send_message(discord.Object(id=289158431213092865),"{0}".format(cur4.fetchone()[0]))
+                dbTotal = cur4.fetchone()[0]
+                #await self.bot.send_message(discord.Object(id=289158431213092865),"{0}".format(cur4.fetchone()[0]))
                 for username,tweetdate,serverid in cur1:
                     status = twitapi.GetUserTimeline(screen_name=username,count=200,include_rts=False,exclude_replies=True)
                     preConvTwitTime = datetime.datetime.strptime(status[0].created_at,"%a %b %d %H:%M:%S %z %Y").replace(tzinfo = pytz.FixedOffset(+0000)).astimezone(pytz.timezone('America/New_York'))
@@ -118,7 +118,7 @@ class Twitter():
                                     for postchanid in row:
                                         if str(server.id) == str(serverid) and str(channel.id) == str(postchanid):
                                             sendit = await self.bot.send_message(discord.Object(id=postchanid),embed=readyit)
-                                            asyncio.sleep(3.5)
+                                            await asyncio.sleep(3.5)
                 sqldb1.commit()
             except Exception as e:
                 error = ReportException()
@@ -129,7 +129,7 @@ class Twitter():
                 else:
                     await self.bot.send_message(discord.Object(id=289158431213092865),"{0}".format(error))
                     await self.bot.send_message(discord.Object(id=289158431213092865),"{0}".format(e))
-            await asyncio.sleep(twitdelay)
+            await asyncio.sleep((900 + (dbTotal * 3.5)) / dbTotal)
         #self.bot.loop.call_later(twitdelay,self.readyupdatecheck)
 
     @commands.command(pass_context=True,hidden=True)
