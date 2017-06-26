@@ -6,7 +6,7 @@ from twitch.api import v3 as twi
 import MySQLdb as MS
 #----------------------------------------------------------------------------------------------------
 try:
-    with open('/root/Waifu/waifu.json', 'r+') as secretfile:
+    with open('./waifu.json', 'r+') as secretfile:
         sec = json.load(secretfile)
         sqlHost = sec['SQL']['sqlHost']
         sqlUser = sec['SQL']['sqlUser']

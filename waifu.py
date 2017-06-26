@@ -7,7 +7,7 @@ global startup_extensions
 startup_extensions = ['ADMIN','tweeter']
 
 try:
-    with open('/root/Waifu/waifu.json', 'r+') as secretfile:
+    with open('./waifu.json', 'r+') as secretfile:
         sec = json.load(secretfile)
         token = sec['bot']['token']
 except FileNotFoundError:

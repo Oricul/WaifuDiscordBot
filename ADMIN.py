@@ -8,7 +8,7 @@ from contextlib import redirect_stdout
 from printoverride import print
 
 try:
-    with open('/root/Waifu/waifu.json', 'r+') as secretfile:
+    with open('./waifu.json', 'r+') as secretfile:
         sec = json.load(secretfile)
         ownerid = sec['bot']['ownerid']
 except FileNotFoundError:

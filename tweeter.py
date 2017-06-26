@@ -5,7 +5,7 @@ from printoverride import print
 import MySQLdb as MS
 #----------------------------------------------------------------------------------------------------
 try:
-    with open('/root/Waifu/waifu.json', 'r+') as secretfile:
+    with open('./waifu.json', 'r+') as secretfile:
         sec = json.load(secretfile)
         sqlHost = sec['SQL']['sqlHost']
         sqlUser = sec['SQL']['sqlUser']
@@ -74,28 +74,28 @@ def is_owner_check(message):
 def is_owner():
     return commands.check(lambda ctx: is_owner_check(ctx.message))
 #----------------------------------------------------------------------------------------------------
-class myThread(threading.Thread):
-    def __init__(self,threadID,twitself):
-        threading.Thread.__init__(self)
-        self.threadID = threadID
-        self.twitself = twitself
-
-    def run(self):
-        print("Twitter: Starting thread.")
-        Twitter.sendupdatecheck(self)
-
 class Twitter():
     def __init__(self,bot):
         self.bot = bot
         print(TwitterLogin())
         print(SQLSetup())
         try:
-            thread1 = myThread(1,self)
+            thread1 = Twitter.myThread(1,self)
             thread1.start()
             #threading._start_new_thread(self.sendupdatecheck(), ("Thread-1", 2,))
         except:
             exit("Failed to start Twitter update check thread.")
         #self.bot.loop.call_soon(self.readyupdatecheck)
+
+    class myThread(threading.Thread):
+        def __init__(self,threadID,twitself):
+            threading.Thread.__init__(self)
+            self.threadID = threadID
+            self.twitself = twitself
+
+        def run(self):
+            print("Twitter: Starting thread.")
+            Twitter.sendupdatecheck(self.twitself)
 
     #def readyupdatecheck(self):
     #    self.bot.loop.create_task(self.sendupdatecheck())
