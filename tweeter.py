@@ -94,7 +94,7 @@ class Twitter():
                 cur3 = sqldb1.cursor()
                 cur4 = sqldb1.cursor()
                 cur4.execute("select count(*) from {0}".format(tblname1))
-                await self.bot.send_message(discord.Object(id=289158431213092865),"{0}".format(cur4.fetch_one()))
+                await self.bot.send_message(discord.Object(id=289158431213092865),"{0}".format(cur4.fetchone()))
                 for username,tweetdate,serverid in cur1:
                     status = twitapi.GetUserTimeline(screen_name=username,count=200,include_rts=False,exclude_replies=True)
                     preConvTwitTime = datetime.datetime.strptime(status[0].created_at,"%a %b %d %H:%M:%S %z %Y").replace(tzinfo = pytz.FixedOffset(+0000)).astimezone(pytz.timezone('America/New_York'))
