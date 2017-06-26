@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import asyncio, datetime, discord, discord.utils, json, linecache, pytz, sys, threading, twitter
+import asyncio, datetime, discord, discord.utils, json, linecache, multiprocessing, pytz, sys, threading, twitter
 from discord.ext import commands
 from printoverride import print
 import MySQLdb as MS
@@ -80,22 +80,12 @@ class Twitter():
         print(TwitterLogin())
         print(SQLSetup())
         try:
-            thread1 = Twitter.myThread(1,self)
+            thread1 = multiprocessing.Process(self.sendupdatecheck())
             thread1.start()
             #threading._start_new_thread(self.sendupdatecheck(), ("Thread-1", 2,))
         except:
             exit("Failed to start Twitter update check thread.")
         #self.bot.loop.call_soon(self.readyupdatecheck)
-
-    class myThread(threading.Thread):
-        def __init__(self,threadID,twitself):
-            threading.Thread.__init__(self)
-            self.threadID = threadID
-            self.twitself = twitself
-
-        def run(self):
-            print("Twitter: Starting thread.")
-            Twitter.sendupdatecheck(self.twitself)
 
     #def readyupdatecheck(self):
     #    self.bot.loop.create_task(self.sendupdatecheck())
