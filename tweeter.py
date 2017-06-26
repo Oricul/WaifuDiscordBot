@@ -45,7 +45,7 @@ def SQLSetup():
                 return "MySQL: Failed to create database '{0}'".format(dbname1)
             else:
                 sqlcmd1 = cur1.execute("use {0}".format(dbname1))
-                sqlcmd1 = cur1.execute("create table {0} (adddate DATETIME, username VARCHAR(20), lasttweet DATETIME, addedby VARCHAR(20))".format(tblname1))
+                sqlcmd1 = cur1.execute("create table {0} (adddate DATETIME, username VARCHAR(20), lasttweet DATETIME, addedby VARCHAR(20), serverid bigint(20))".format(tblname1))
                 sqlcmd1 = cur1.execute("create table {0} (adddate DATETIME, channelid BIGINT, addedby VARCHAR(20))".format(tblname2))
                 return "MySQL: Created database '{0}' and tables '{1}', '{2}'.".format(dbname1,tblname1,tblname2)
         sqlcmd1 = cur1.execute("use {0}".format(dbname1))
