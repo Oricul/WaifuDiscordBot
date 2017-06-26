@@ -94,6 +94,8 @@ class Twitter():
                 cur4 = sqldb1.cursor()
                 cur4.execute("select count(*) from {0}".format(tblname1))
                 dbTotal = cur4.fetchone()[0]
+                if dbTotal <= 0:
+                    dbTotal = 1
                 #await self.bot.send_message(discord.Object(id=289158431213092865),"{0}".format(cur4.fetchone()[0]))
                 for username,tweetdate,serverid in cur1:
                     status = twitapi.GetUserTimeline(screen_name=username,count=200,include_rts=False,exclude_replies=True)
