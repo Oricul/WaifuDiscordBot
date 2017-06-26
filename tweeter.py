@@ -91,11 +91,11 @@ class Twitter():
                 cur2 = sqldb1.cursor()
                 cur2.execute("select channelid from {0}".format(tblname2))
                 cur3 = sqldb1.cursor()
-                cur4 = sqldb1.cursor()
-                cur4.execute("select count(*) from {0}".format(tblname1))
-                dbTotal = cur4.fetchone()[0]
-                if dbTotal <= 0:
-                    dbTotal = 1
+                #cur4 = sqldb1.cursor()
+                #cur4.execute("select count(*) from {0}".format(tblname1))
+                #dbTotal = cur4.fetchone()[0]
+                #if dbTotal <= 0:
+                #    dbTotal = 1
                 #await self.bot.send_message(discord.Object(id=289158431213092865),"{0}".format(cur4.fetchone()[0]))
                 for username,tweetdate,serverid in cur1:
                     status = twitapi.GetUserTimeline(screen_name=username,count=200,include_rts=False,exclude_replies=True)
@@ -131,7 +131,7 @@ class Twitter():
                 else:
                     await self.bot.send_message(discord.Object(id=289158431213092865),"{0}".format(error))
                     await self.bot.send_message(discord.Object(id=289158431213092865),"{0}".format(e))
-            await asyncio.sleep((900 + (dbTotal * 3.5)) / dbTotal)
+            #await asyncio.sleep((900 + (dbTotal * 3.5)) / dbTotal)
         #self.bot.loop.call_later(twitdelay,self.readyupdatecheck)
 
     @commands.command(pass_context=True,hidden=True)
