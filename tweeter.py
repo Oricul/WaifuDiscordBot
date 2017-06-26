@@ -120,7 +120,7 @@ class Twitter():
                                     for postchanid in row:
                                         if str(server.id) == str(serverid) and str(channel.id) == str(postchanid):
                                             sendit = await self.bot.send_message(discord.Object(id=postchanid),embed=readyit)
-                                            await asyncio.sleep(3.5)
+                    await asyncio.sleep(3.5)
                 sqldb1.commit()
             except Exception as e:
                 error = ReportException()
