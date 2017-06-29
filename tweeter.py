@@ -124,13 +124,8 @@ class Twitter():
                 sqldb1.commit()
             except Exception as e:
                 error = ReportException()
-                if 'Over capacity' in error:
-                    twitdelay += 10
-                    await self.bot.send_message(discord.Object(id=289158431213092865),"`Twitter: Woops! Rate limit reached. Increasing delay from {0} to {1}.`".format(twitdelay-10,twitdelay))
-                    print("Twitter: Rate limit reached, increased to {0}.".format(twitdelay))
-                else:
-                    await self.bot.send_message(discord.Object(id=289158431213092865),"{0}".format(error))
-                    await self.bot.send_message(discord.Object(id=289158431213092865),"{0}".format(e))
+                raise(error)
+                raise(e)
             #await asyncio.sleep((900 + (dbTotal * 3.5)) / dbTotal)
         #self.bot.loop.call_later(twitdelay,self.readyupdatecheck)
 
