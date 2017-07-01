@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import asyncio, datetime, discord, discord.utils, json, linecache, multiprocessing, pytz, sys, threading, twitter
+import asyncio, datetime, discord, discord.utils, json, linecache, pytz, sys, twitter
 from discord.ext import commands
 from printoverride import print
 import MySQLdb as MS
@@ -91,14 +91,12 @@ class Twitter():
                 cur2 = sqldb1.cursor()
                 cur2.execute("select channelid from {0}".format(tblname2))
                 cur3 = sqldb1.cursor()
-                #cur4 = sqldb1.cursor()
-                #cur4.execute("select count(*) from {0}".format(tblname1))
-                #dbTotal = cur4.fetchone()[0]
-                #if dbTotal <= 0:
-                #    dbTotal = 1
-                #await self.bot.send_message(discord.Object(id=289158431213092865),"{0}".format(cur4.fetchone()[0]))
                 for username,tweetdate,serverid in cur1:
-                    status = twitapi.GetUserTimeline(screen_name=username,count=200,include_rts=False,exclude_replies=True)
+                    try:
+                        status = twitapi.GetUserTimeline(screen_name=username,count=200,include_rts=False,exclude_replies=True)
+                    except:
+                        print("Twitter Exception: {0}\n\nContinuing...".format(ReportException()))
+                        pass
                     preConvTwitTime = datetime.datetime.strptime(status[0].created_at,"%a %b %d %H:%M:%S %z %Y").replace(tzinfo = pytz.FixedOffset(+0000)).astimezone(pytz.timezone('America/New_York'))
                     convTwitTime = datetime.datetime.strftime(preConvTwitTime,"%Y-%m-%d %H:%M:%S")
                     if str(tweetdate) != str(convTwitTime):
@@ -110,7 +108,7 @@ class Twitter():
                         readyit.set_footer(text="\U0001F4E2 {0} \U00002764 {1} | {2}".format(status[0].retweet_count,status[0].favorite_count,convTwitTime))
                         try:
                             for entry in status[0].media:
-                                if entry.type == "photo":
+                                if entry.type != None:
                                     readyit.set_image(url=entry.media_url)
                         except:
                             pass
@@ -124,10 +122,8 @@ class Twitter():
                 sqldb1.commit()
             except Exception as e:
                 error = ReportException()
-                raise(error)
-                raise(e)
-            #await asyncio.sleep((900 + (dbTotal * 3.5)) / dbTotal)
-        #self.bot.loop.call_later(twitdelay,self.readyupdatecheck)
+                print("{0}\n{1}".format(error,e))
+                pass
 
     @commands.command(pass_context=True,hidden=True)
     @is_owner()
