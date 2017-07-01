@@ -82,6 +82,20 @@ class Twitter():
 
     async def sendupdatecheck(self):
         global twitdelay
+        chars = {
+            "&gt;": ">",
+            "&nbsp;": " ",
+            "&lt;": "<",
+            "&amp;": "&",
+            "&quot;": "\"",
+            "&apos;": "\'",
+            "&cent;": "¢",
+            "&pound;": "£",
+            "&yen;": "¥",
+            "&euro;": "€",
+            "&copy;": "©",
+            "&reg;": "®"
+        }
         await self.bot.wait_until_ready()
         while not self.bot.is_closed:
             try:
@@ -102,8 +116,12 @@ class Twitter():
                     if str(tweetdate) != str(convTwitTime):
                         cur3.execute("update {0} set lasttweet='{1}' where username='{2}';".format(tblname1,convTwitTime,username))
                         convTwitTime = datetime.datetime.strftime(preConvTwitTime,"%a, %b %d, %Y %I:%M:%S %p")
+                        twitdesc = "{0}".format(status[0].text)
+                        for key, value in chars.items():
+                            if key in twitdesc:
+                                twitdesc = twitdesc.replace(key,value)
                         readyit = discord.Embed(title="{0} (@{1})".format(status[0].user.name,status[0].user.screen_name),colour=int(hex(int(status[0].user.profile_background_color,16)),16), \
-                                                url="https://www.twitter.com/{0}/status/{1}".format(status[0].user.screen_name,status[0].id_str), description="{0}".format(status[0].text))
+                                                url="https://www.twitter.com/{0}/status/{1}".format(status[0].user.screen_name,status[0].id_str), description="{0}".format(twitdesc))
                         readyit.set_thumbnail(url=status[0].user.profile_image_url)
                         readyit.set_footer(text="\U0001F4E2 {0} \U00002764 {1} | {2}".format(status[0].retweet_count,status[0].favorite_count,convTwitTime))
                         try:
