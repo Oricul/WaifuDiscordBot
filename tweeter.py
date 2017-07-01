@@ -109,7 +109,10 @@ class Twitter():
                         try:
                             for entry in status[0].media:
                                 if entry.type != None:
-                                    readyit.set_image(url=entry.media_url)
+                                    if entry.type == "photo":
+                                        readyit.set_image(url=entry.media_url)
+                                    else:
+                                        readyit.video(url=entry.media_url)
                         except:
                             pass
                         for server in self.bot.servers:
