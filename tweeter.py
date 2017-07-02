@@ -158,9 +158,12 @@ class Twitter():
         cur1.execute("select adddate,username,addedby,serverid from {0}".format(tblname1))
         compmsg = ""
         for adddate,username,addedby,serverid in cur1:
-            await self.bot.say("{0} ||| {1}".format(str(ctx.message.server.id),serverid))
             if str(ctx.message.server.id) == str(serverid):
-                compmsg = "{0}Add Date: {1}, Username: {2}, Added By: {3}\n".format(compmsg,adddate,username,addedby)
+                sqladdby = ctx.message.server.get_member(addedby)
+                if sqladdby == None:
+                    sqladdby = 'NULL'
+                whenadd = datetime.datetime.strftime(adddate, "%a, %b %d, %Y %I:%M:%S %p")
+                compmsg = "{0}Add Date: {1}, Username: @{2}, Added By: {3}\n".format(compmsg,whenadd,username,sqladdby)
                 if len(compmsg) > 1500:
                     await self.bot.say(compmsg)
                     compmsg = ""
