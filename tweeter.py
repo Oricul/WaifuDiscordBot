@@ -151,18 +151,16 @@ class Twitter():
 
     @commands.command(pass_context=True)
     @is_owner()
-    async def twitlist(self,ctx,qry = "server"):
-        """Returns the accounts being followed.
-        Options:
-        - server : (DEFAULT) Returns all accounts being followed on the server.
-        - channel : Returns all accounts being followed in the current channel."""
-        qry = qry.lower()
-        if qry == "server":
-            await self.bot.say("Found server.")
-        elif qry == "channel":
-            await self.bot.say("Found channel.")
-        else:
-            await self.bot.say("Invalid entry.")
+    async def twitlist(self,ctx):
+        """Returns all the Twitter accounts being followed on the current server."""
+        sqldb1 = MS.connect(host=sqlHost, user=sqlUser, passwd=sqlPass, db=dbname1)
+        cur1 = sqldb1.cursor()
+        cur1.execute("select adddate,username,addedby,serverid from {0}".format(tblname1))
+        compmsg = ""
+        for adddate,username,addedby,serverid in cur1:
+            if str(ctx.message.server.id) == serverid:
+                compmsg = "{0}Add Date: {1}, Username: {2}, Added By: {3}\n".format(compmsg,adddate,username,addedby)
+        await self.bot.say(compmsg)
         return
 
     @commands.command(pass_context=True,hidden=True)
@@ -273,14 +271,6 @@ class Twitter():
                     status = twitapi.GetUserTimeline(screen_name=msg)
                     await self.bot.say("`Removed {0} (@{1}).`".format(status[0].user.name,status[0].user.screen_name))
                     return
-#            for row in cur1:
-#                for username in row:
-#                    if username == msg:
-#                        cur1.execute("delete from {0} where username like '{1}';".format(tblname1,msg))
-#                        sqldb1.commit()
-#                        status = twitapi.GetUserTimeline(screen_name=msg)
-#                        await self.bot.say("`Removed {0} (@{1}).`".format(status[0].user.name,status[0].user.screen_name))
-#                        return
             sqldb1.close()
             await self.bot.say("`{0} is not currently being followed on Twitter.`".format(msg.title()))
         except:
