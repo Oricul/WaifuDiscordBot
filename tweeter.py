@@ -160,6 +160,9 @@ class Twitter():
         for adddate,username,addedby,serverid in cur1:
             if str(ctx.message.server.id) == serverid:
                 compmsg = "{0}Add Date: {1}, Username: {2}, Added By: {3}\n".format(compmsg,adddate,username,addedby)
+                if len(compmsg) > 1500:
+                    await self.bot.say(compmsg)
+                    compmsg = ""
         await self.bot.say(compmsg)
         return
 
