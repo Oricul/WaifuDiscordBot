@@ -158,7 +158,8 @@ class Twitter():
         cur1.execute("select adddate,username,addedby,serverid from {0}".format(tblname1))
         compmsg = ""
         for adddate,username,addedby,serverid in cur1:
-            if str(ctx.message.server.id) == serverid:
+            await self.bot.say("{0} ||| {1}".format(str(ctx.message.server.id),serverid))
+            if str(ctx.message.server.id) == str(serverid):
                 compmsg = "{0}Add Date: {1}, Username: {2}, Added By: {3}\n".format(compmsg,adddate,username,addedby)
                 if len(compmsg) > 1500:
                     await self.bot.say(compmsg)
