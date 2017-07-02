@@ -145,7 +145,17 @@ class Twitter():
 
     @commands.command(pass_context=True)
     @is_owner()
-    async def twitlist(self,ctx):
+    async def twitlist(self,ctx,*,qry = "server"):
+        """Returns the accounts being followed.
+        Options:
+        - server : (DEFAULT) Returns all accounts being followed on the server.
+        - channel : Returns all accounts being followed in the current channel."""
+        if qry == "server":
+            await self.bot.say("Found server.")
+        elif qry == "channel":
+            await self.bot.say("Found channel.")
+        else:
+            await self.bot.say("Invalid entry.")
         return
 
     @commands.command(pass_context=True,hidden=True)
