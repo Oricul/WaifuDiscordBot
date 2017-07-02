@@ -3,6 +3,7 @@ import datetime, discord, json
 from printoverride import print as print
 from discord.ext import commands
 from platform import python_version
+from pyshorteners import Shortener as short
 #import help
 
 global startup_extensions
@@ -12,6 +13,7 @@ try:
     with open('./waifu.json', 'r+') as secretfile:
         sec = json.load(secretfile)
         token = sec['bot']['token']
+        gToken = sec['bot']['Google']
 except FileNotFoundError:
     exit("waifu.json is not in the current bot directory.")
 
@@ -27,7 +29,9 @@ async def on_ready():
     ownMSG = "Owner: {0}".format(appinfo.owner)
     chanMSG = "Servers: {0}".format(len(bot.servers))
     userMSG = "Users: {0}".format(len(list(bot.get_all_members())))
-    oauth = "OAuth URL: {0}".format(discord.utils.oauth_url(bot.user.id))
+    url = "{0}".format(discord.utils.oauth_url(bot.user.id))
+    urlshort = await short('Waifu Discord Bot',api_key=gToken)
+    oauth = "OAuth URL: {0}".format(urlshort.short(url))
     onDIV = '*'
     while len(onDIV) < len(onlineMSG):
         onDIV = onDIV + '*'
