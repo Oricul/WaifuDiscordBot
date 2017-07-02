@@ -2,7 +2,7 @@
 import datetime, discord, json
 from printoverride import print as print
 from discord.ext import commands
-import help
+#import help
 
 global startup_extensions
 startup_extensions = ['ADMIN','tweeter']
