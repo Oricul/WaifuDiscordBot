@@ -70,18 +70,18 @@ class Help(formatter.HelpFormatter):
         else:
             return self.context.me.color
 
-    def _add_subcommands(self, cmds):
-        entries = ''
-        for name, command in cmds:
-            if name in command.aliases:
+    #def _add_subcommands(self, cmds):
+    #    entries = ''
+    #    for name, command in cmds:
+    #        if name in command.aliases:
                 # skip aliases
-                continue
+    #            continue
 
             #if self.is_cog() or self.is_bot():
             #    name = f'{self.clean_prefix}{name}'
 
-            entries += f'**{name}:**   {command.short_doc}\n'  # .format(self.clean_prefix, name, command.short_doc)
-        return entries
+     #       entries += f'**{name}:**   {command.short_doc}\n'  # .format(self.clean_prefix, name, command.short_doc)
+     #   return entries
 
     def paginate(self, value):
         """
