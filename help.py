@@ -77,8 +77,8 @@ class Help(formatter.HelpFormatter):
                 # skip aliases
                 continue
 
-            if self.is_cog() or self.is_bot():
-                name = f'{self.clean_prefix}{name}'
+            #if self.is_cog() or self.is_bot():
+            #    name = f'{self.clean_prefix}{name}'
 
             entries += f'**{name}:**   {command.short_doc}\n'  # .format(self.clean_prefix, name, command.short_doc)
         return entries
