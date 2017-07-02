@@ -23,6 +23,8 @@ async def on_ready():
     onlineMSG = "* Logged in as '{0}' ({1}). *".format(bot.user.name,bot.user.id)
     dversionMSG = "Discord API v{0}".format(discord.__version__)
     pversionMSG = "Python3 v{0}".format(python_version())
+    testMSG = await bot.application_info()
+    print(testMSG.owner)
     #ownMSG = "Owner: {0}".format(bot.owner)
     chanMSG = "Servers: {0}".format(len(bot.servers))
     userMSG = "Users: {0}".format(len(list(bot.get_all_members())))
