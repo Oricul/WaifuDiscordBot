@@ -56,12 +56,7 @@ async def on_ready():
         if len(userMSG) < onLEN:
             userMSG = userMSG + ' '
     userMSG = '*' + userMSG + '*'
-    while len(oauth) < onLEN:
-        oauth = ' ' + oauth
-        if len(oauth) < onLEN:
-            oauth = oauth + ' '
-    oauth = '*' + oauth + '*'
-    print("{0}\n{1}\n{2}\n{3}\n{4}\n{5}\n{6}\n{0}".format(onDIV,onlineMSG,dversionMSG,pversionMSG,chanMSG,userMSG,oauth))
+    print("{0}\n{1}\n{2}\n{3}\n{4}\n{5}\n{0}\n{6}".format(onDIV,onlineMSG,dversionMSG,pversionMSG,chanMSG,userMSG,oauth))
     if __name__ == '__main__':
         for extension in startup_extensions:
             try:
