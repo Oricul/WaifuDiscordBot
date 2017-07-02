@@ -163,7 +163,7 @@ class Twitter():
                 if sqladdby == None:
                     sqladdby = 'NULL'
                 whenadd = datetime.datetime.strftime(adddate, "%a, %b %d, %Y %I:%M:%S %p")
-                compmsg = "{0}Add Date: {1}, Username: @{2}, Added By: {3}\n".format(compmsg,whenadd,username,sqladdby)
+                compmsg = "{0}Add Date: {1}, Username: @{2}, Added By: <@{3}>\n".format(compmsg,whenadd,username,sqladdby)
                 if len(compmsg) > 1500:
                     await self.bot.say(compmsg)
                     compmsg = ""
