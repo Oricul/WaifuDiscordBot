@@ -30,7 +30,7 @@ async def on_ready():
     chanMSG = "Servers: {0}".format(len(bot.servers))
     userMSG = "Users: {0}".format(len(list(bot.get_all_members())))
     url = "{0}".format(discord.utils.oauth_url(bot.user.id))
-    urlshort = await short('Waifu Discord Bot',api_key=gToken)
+    urlshort = await short('Google',api_key=gToken)
     oauth = "OAuth URL: {0}".format(urlshort.short(url))
     onDIV = '*'
     while len(onDIV) < len(onlineMSG):
