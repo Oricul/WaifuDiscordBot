@@ -23,9 +23,8 @@ async def on_ready():
     onlineMSG = "* Logged in as '{0}' ({1}). *".format(bot.user.name,bot.user.id)
     dversionMSG = "Discord API v{0}".format(discord.__version__)
     pversionMSG = "Python3 v{0}".format(python_version())
-    #testMSG = await bot.application_info()
-    print(await bot.application_info().owner)
-    #ownMSG = "Owner: {0}".format(bot.owner)
+    appinfo = await bot.application_info()
+    ownMSG = "Owner: {0}".format(appinfo.owner)
     chanMSG = "Servers: {0}".format(len(bot.servers))
     userMSG = "Users: {0}".format(len(list(bot.get_all_members())))
     oauth = "OAuth URL: {0}".format(discord.utils.oauth_url(bot.user.id))
@@ -43,11 +42,11 @@ async def on_ready():
         if len(pversionMSG) < onLEN:
             pversionMSG = pversionMSG + ' '
     pversionMSG = '*' + pversionMSG + '*'
-    #while len(ownMSG) < onLEN:
-    #    ownMSG = ' ' + ownMSG
-    #    if len(ownMSG) < onLEN:
-    #        ownMSG = ownMSG + ' '
-    #ownMSG = '*' + ownMSG + '*'
+    while len(ownMSG) < onLEN:
+        ownMSG = ' ' + ownMSG
+        if len(ownMSG) < onLEN:
+            ownMSG = ownMSG + ' '
+    ownMSG = '*' + ownMSG + '*'
     while len(chanMSG) < onLEN:
         chanMSG = ' ' + chanMSG
         if len(chanMSG) < onLEN:
@@ -58,7 +57,7 @@ async def on_ready():
         if len(userMSG) < onLEN:
             userMSG = userMSG + ' '
     userMSG = '*' + userMSG + '*'
-    print("{0}\n{1}\n{2}\n{3}\n{4}\n{5}\n{0}\n{6}".format(onDIV,onlineMSG,dversionMSG,pversionMSG,chanMSG,userMSG,oauth))
+    print("{0}\n{1}\n{2}\n{3}\n{4}\n{5}\n{6}\n{0}\n{7}".format(onDIV,onlineMSG,dversionMSG,pversionMSG,ownMSG,chanMSG,userMSG,oauth))
     if __name__ == '__main__':
         for extension in startup_extensions:
             try:
