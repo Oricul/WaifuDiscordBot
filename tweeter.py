@@ -87,7 +87,7 @@ def is_owner_check(message):
 def is_owner():
     return commands.check(lambda ctx: is_owner_check(ctx.message))
 #----------------------------------------------------------------------------------------------------
-async def twitmsg(status,preConvTwitTime,convTwitTime,cur3):
+async def twitmsg(status,preConvTwitTime,convTwitTime,cur3,username):
     cur3.execute("update {0} set lasttweet='{1}' where username='{2}';".format(tblname1,convTwitTime,username))
     convTwitTime = datetime.datetime.strftime(preConvTwitTime,"%a, %b %d, %Y %I:%M:%S %p")
     twitdesc = "{0}".format(status[0].text)
@@ -135,7 +135,7 @@ class Twitter():
                     preConvTwitTime = datetime.datetime.strptime(status[0].created_at,"%a %b %d %H:%M:%S %z %Y").replace(tzinfo = pytz.FixedOffset(+0000)).astimezone(pytz.timezone('America/New_York'))
                     convTwitTime = datetime.datetime.strftime(preConvTwitTime,"%Y-%m-%d %H:%M:%S")
                     if str(tweetdate) != str(convTwitTime):
-                        readyit = await twitmsg(status,preConvTwitTime,convTwitTime,cur3)
+                        readyit = await twitmsg(status,preConvTwitTime,convTwitTime,cur3,username)
                         for server in self.bot.servers:
                             for channel in server.channels:
                                 for row in cur2:
