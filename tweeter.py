@@ -23,6 +23,20 @@ twitapi = twitter.Api(consumer_key=consumerkey,
           consumer_secret=consumersecret,
           access_token_key=accesstokenkey,
           access_token_secret=accesstokensecret)
+chars = {
+    "&gt;": ">",
+    "&nbsp;": " ",
+    "&lt;": "<",
+    "&amp;": "&",
+    "&quot;": "\"",
+    "&apos;": "\'",
+    "&cent;": "¢",
+    "&pound;": "£",
+    "&yen;": "¥",
+    "&euro;": "€",
+    "&copy;": "©",
+    "&reg;": "®"
+}
 #----------------------------------------------------------------------------------------------------
 def ReportException():
     exc_type, exc_obj, tb = sys.exc_info()
@@ -73,6 +87,27 @@ def is_owner_check(message):
 def is_owner():
     return commands.check(lambda ctx: is_owner_check(ctx.message))
 #----------------------------------------------------------------------------------------------------
+async def twitmsg(status,preConvTwitTime,convTwitTime,cur3):
+    cur3.execute("update {0} set lasttweet='{1}' where username='{2}';".format(tblname1,convTwitTime,username))
+    convTwitTime = datetime.datetime.strftime(preConvTwitTime,"%a, %b %d, %Y %I:%M:%S %p")
+    twitdesc = "{0}".format(status[0].text)
+    for key,value in chars.items():
+        if key in twitdesc:
+            twitdesc = twitdesc.replace(key,value)
+    readyit = discord.Embed(title="{0} (@{1})".format(status[0].user.name,status[0].user.screen.name),
+                            colour=int(hex(int(status[0].user.profile_background_color,16)),16),
+                            url="https://www.twitter.com/{0}/status/{1}".format(status[0].user.screen_name,status[0].id_str),
+                            description="{0}".format(twitdesc))
+    readyit.set_thumbnail(url=status[0].user.profile_image_url)
+    readyit.set_footer(text="\U0001F4E2 {0} \U00002764 {1} | {2}".format(status[0].retweet_count,status[0].favorite_count,convTwitTime))
+    try:
+        for entry in status[0].media:
+            if entry.type != None:
+                readyit.set_image(url=entry.media_url)
+    except:
+        pass
+    return readyit
+#----------------------------------------------------------------------------------------------------
 class Twitter():
     def __init__(self,bot):
         self.bot = bot
@@ -82,20 +117,6 @@ class Twitter():
 
     async def sendupdatecheck(self):
         global twitdelay
-        chars = {
-            "&gt;": ">",
-            "&nbsp;": " ",
-            "&lt;": "<",
-            "&amp;": "&",
-            "&quot;": "\"",
-            "&apos;": "\'",
-            "&cent;": "¢",
-            "&pound;": "£",
-            "&yen;": "¥",
-            "&euro;": "€",
-            "&copy;": "©",
-            "&reg;": "®"
-        }
         await self.bot.wait_until_ready()
         while not self.bot.is_closed:
             try:
@@ -114,22 +135,7 @@ class Twitter():
                     preConvTwitTime = datetime.datetime.strptime(status[0].created_at,"%a %b %d %H:%M:%S %z %Y").replace(tzinfo = pytz.FixedOffset(+0000)).astimezone(pytz.timezone('America/New_York'))
                     convTwitTime = datetime.datetime.strftime(preConvTwitTime,"%Y-%m-%d %H:%M:%S")
                     if str(tweetdate) != str(convTwitTime):
-                        cur3.execute("update {0} set lasttweet='{1}' where username='{2}';".format(tblname1,convTwitTime,username))
-                        convTwitTime = datetime.datetime.strftime(preConvTwitTime,"%a, %b %d, %Y %I:%M:%S %p")
-                        twitdesc = "{0}".format(status[0].text)
-                        for key, value in chars.items():
-                            if key in twitdesc:
-                                twitdesc = twitdesc.replace(key,value)
-                        readyit = discord.Embed(title="{0} (@{1})".format(status[0].user.name,status[0].user.screen_name),colour=int(hex(int(status[0].user.profile_background_color,16)),16), \
-                                                url="https://www.twitter.com/{0}/status/{1}".format(status[0].user.screen_name,status[0].id_str), description="{0}".format(twitdesc))
-                        readyit.set_thumbnail(url=status[0].user.profile_image_url)
-                        readyit.set_footer(text="\U0001F4E2 {0} \U00002764 {1} | {2}".format(status[0].retweet_count,status[0].favorite_count,convTwitTime))
-                        try:
-                            for entry in status[0].media:
-                                if entry.type != None:
-                                    readyit.set_image(url=entry.media_url)
-                        except:
-                            pass
+                        readyit = await twitmsg(status,preConvTwitTime,convTwitTime,cur3)
                         for server in self.bot.servers:
                             for channel in server.channels:
                                 for row in cur2:
