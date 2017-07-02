@@ -27,6 +27,13 @@ class ADMIN():
 
     @commands.command(pass_context=True, hidden=True)
     @is_owner()
+    async def status(self,ctx):
+        """Set the status of the bot. Owner only."""
+        await self.bot.change_presence(game=discord.Game(name="{0}".format(ctx.message.content[10:])))
+        return
+
+    @commands.command(pass_context=True, hidden=True)
+    @is_owner()
     async def load(self,ctx,extension_name : str):
         'Load an extension/category.'
         try:

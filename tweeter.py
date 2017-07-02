@@ -143,6 +143,11 @@ class Twitter():
                 print("{0}\n{1}".format(error,e))
                 pass
 
+    @commands.command(pass_context=True)
+    @is_owner()
+    async def twitlist(self,ctx):
+        return
+
     @commands.command(pass_context=True,hidden=True)
     @is_owner()
     async def tweet(self,ctx,*,msg : str):
