@@ -2,6 +2,7 @@
 import datetime, discord, json
 from printoverride import print as print
 from discord.ext import commands
+from platform import python_version
 #import help
 
 global startup_extensions
