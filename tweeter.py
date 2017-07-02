@@ -94,7 +94,7 @@ async def twitmsg(status,preConvTwitTime,convTwitTime,cur3,username):
     for key,value in chars.items():
         if key in twitdesc:
             twitdesc = twitdesc.replace(key,value)
-    readyit = discord.Embed(title="{0} (@{1})".format(status[0].user.name,status[0].user.screen.name),
+    readyit = discord.Embed(title="{0} (@{1})".format(status[0].user.name,status[0].user.screen_name),
                             colour=int(hex(int(status[0].user.profile_background_color,16)),16),
                             url="https://www.twitter.com/{0}/status/{1}".format(status[0].user.screen_name,status[0].id_str),
                             description="{0}".format(twitdesc))
