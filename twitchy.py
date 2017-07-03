@@ -116,7 +116,8 @@ async def twitchFormat(format,chOutput,brOutput):
                               value=brOutput['stream']['viewers'],
                               inline=True)
         else:
-            compMSG = "Invalid format."
+            print("Invalid status when using function 'twitchFormat'.")
+            return
     except:
         ReportException()
         return
@@ -129,11 +130,16 @@ class Twitch():
 
     @commands.command(pass_context=True)
     async def twitchAdd(self,ctx,username):
+        """Add a Twitch username to this server's watchlist.
+
+        Usage: ori.twitchAdd <username>
+        Example: ori.twitchAdd monstercat"""
         tStatus = await twitchGet(username)
         if tStatus[0] == 1:
-            outMSG = "{0} not found on Twitch.".format(username)
+            outMSG = discord.Embed(colour=discord.Colour(0xFF0000))
+            outMSG.set_author(name="{0} not found on Twitch.TV".format(username))
         else:
-            outMSG = await twitchFormat('update',tStatus[1],tStatus[2])
+            outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
         await self.bot.send_message(discord.Object(id=ctx.message.channel.id),embed=outMSG)
         return
 
