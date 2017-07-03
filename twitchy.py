@@ -76,7 +76,18 @@ async def twitchFormat(format,chOutput,brOutput):
     try:
         if format == 'status':
             if brOutput['stream'] == None:
-                compMSG = "Offline"
+                compMSG = discord.Embed(title="[LAST LIVE]",
+                                        colour=discord.Colour(0x4C0B5F),
+                                        description=chOutput['updated_at'])
+                compMSG.set_thumbnail(url=chOutput['logo'])
+                compMSG.set_author(name="{0} is not currently streaming on Twitch.TV".format(chOutput['display_name']),
+                                   url=chOutput['url'])
+                compMSG.add_field(name="[FOLLOWERS]",
+                                  value=chOutput['followers'],
+                                  inline=True)
+                compMSG.add_field(name="[TOTAL VIEWS]",
+                                  value=chOutput['views'],
+                                  inline=True)
             else:
                 compMSG = discord.Embed(title="[TITLE]",
                                         colour=discord.Colour(0x8904B1),
@@ -85,11 +96,11 @@ async def twitchFormat(format,chOutput,brOutput):
                 compMSG.set_image(url=brOutput['stream']['preview']['medium'])
                 compMSG.set_author(name="{0} is streaming live on Twitch.TV".format(brOutput['stream']['channel']['display_name']),
                                    url=brOutput['stream']['channel']['url'])
+                compMSG.add_field(name="[GAME]",
+                                  value=brOutput['stream']['game'],
+                                  inline=True)
                 compMSG.add_field(name="[VIEWERS]",
                                 value=brOutput['stream']['viewers'],
-                                inline=True)
-                compMSG.add_field(name="[GAME]",
-                                value=brOutput['stream']['game'],
                                 inline=True)
         elif format == 'update':
             compMSG = "Update"
