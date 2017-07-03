@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import asyncio, datetime, discord, discord.utils, json, linecache, pytz, sys, time, twitter
+import asyncio, datetime, discord, discord.utils, json, linecache, pytz, sys, time
 from discord.ext import commands
 from printoverride import print
 from twitch.api import v3 as twitch
@@ -79,6 +79,7 @@ class Twitch():
     @commands.command(pass_context=True)
     async def twitchAdd(self,ctx,username):
         tStatus = await twitchGet(username)
+        await self.bot.say("{0} ||| {1}".format(None,tStatus[0]))
         if tStatus[0] == None:
             await self.bot.say("{0} not found on Twitch.".format(username))
         else:
