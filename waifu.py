@@ -4,7 +4,6 @@ from printoverride import print as print
 from discord.ext import commands
 from platform import python_version
 from pyshorteners import Shortener as short
-#import help
 
 global startup_extensions
 startup_extensions = ['ADMIN','tweeter']
@@ -27,6 +26,7 @@ async def on_ready():
     pversionMSG = "Python3 v{0}".format(python_version())
     appinfo = await bot.application_info()
     ownMSG = "Owner: {0}".format(appinfo.owner)
+    print(dir(appinfo.owner))
     chanMSG = "Servers: {0}".format(len(bot.servers))
     userMSG = "Users: {0}".format(len(list(bot.get_all_members())))
     url = "{0}".format(discord.utils.oauth_url(bot.user.id))
