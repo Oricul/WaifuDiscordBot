@@ -45,13 +45,13 @@ def SQLSetup():
                 sqlcmd1 = cur1.execute("create table {0} (username VARCHAR(20), game VARCHAR(60), title VARCHAR(100))".format(tblname3))
                 return "MySQL: Created database '{0}' and tables '{1}', '{2}', '{3}'.".format(dbname1,tblname1,tblname2,tblname3)
         sqlcmd1 = cur1.execute("use {0}".format(dbname1))
-        cur1.execute("select count(*) from information_schema.tables where table_name = '{0}'".format(tblname1))
+        cur1.execute("select count(*) from information_schema.tables where table_name = '{0}' and table_schema = '{1}'".format(tblname1,dbname1))
         if not cur1.fetchone()[0] < 1:
             sqlcmd1 = cur1.execute("create table {0} (username VARCHAR(20), adddate DATETIME, addedby VARCHAR(20))".format(tblname1))
-        cur1.execute("select count(*) from information_schema.tables where table_name = '{0}'".format(tblname2))
+        cur1.execute("select count(*) from information_schema.tables where table_name = '{0}' and table_schema = '{1}'".format(tblname2,dbname1))
         if not cur1.fetchone()[0] < 1:
             sqlcmd1 = cur1.execute("create table {0} (channelid BIGINT, adddate DATETIME, addedby VARCHAR(20))".format(tblname2))
-        cur1.execute("select count(*) from information_schema.tables where table_name = '{0}'".format(tblname3))
+        cur1.execute("select count(*) from information_schema.tables where table_name = '{0}' and table_schema = '{1}'".format(tblname3,dbname1))
         if not cur1.fetchone()[0] < 1:
             sqlcmd1 = cur1.execute("create table {0} (username VARCHAR(20), game VARCHAR(60), title VARCHAR(100))".format(tblname3))
         return "MySQL: Database '{0}' and tables '{1}', '{2}', '{3}'  exist.".format(dbname1,tblname1,tblname2,tblname3)
