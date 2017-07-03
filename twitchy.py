@@ -2,7 +2,7 @@
 import asyncio, datetime, discord, discord.utils, json, linecache, pytz, sys, time, twitter
 from discord.ext import commands
 from printoverride import print
-from twitch.api import v3 as twi
+from twitch.api import v3 as twitch
 import MySQLdb as MS
 #----------------------------------------------------------------------------------------------------
 try:
