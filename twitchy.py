@@ -71,6 +71,13 @@ async def twitchGet(username : str,flag = 0,chOutput = None,brOutput = None):
     except:
         flag = 1
     return [flag,chOutput,brOutput]
+
+async def twitchFormat(chOutput,brOutput):
+    if brOutput[2]['stream'] == None:
+        compMSG = "Offline"
+    else:
+        compMSG = "Online"
+    return compMSG
 #----------------------------------------------------------------------------------------------------
 class Twitch():
     def __init__(self,bot):
@@ -83,11 +90,7 @@ class Twitch():
         if tStatus[0] == 1:
             outMSG = "{0} not found on Twitch.".format(username)
         else:
-            outMSG = "{0} found on Twitch.".format(tStatus[1]['display_name'])
-            if tStatus[2]['stream'] == None:
-                outMSG = "{0}\n{1} is offline.".format(outMSG,tStatus[1]['display_name'])
-            else:
-                outMSG = "{0}\n{1} is online.".format(outMSG,tStatus[1]['display_name'])
+            outMSG = "{0} found on Twitch and is {1}.".format(tStatus[1]['display_name'],await twitchFormat(tStatus[1],tStatus[2]))
         await self.bot.say(outMSG)
         return
 
