@@ -6,7 +6,7 @@ from platform import python_version
 from pyshorteners import Shortener as short
 
 global startup_extensions
-startup_extensions = ['ADMIN','tweeter']
+startup_extensions = ['ADMIN','tweeter','twitchy']
 
 try:
     with open('./waifu.json', 'r+') as secretfile:
