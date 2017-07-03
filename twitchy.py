@@ -72,12 +72,29 @@ async def twitchGet(username : str,flag = 0,chOutput = None,brOutput = None):
         flag = 1
     return [flag,chOutput,brOutput]
 
-async def twitchFormat(chOutput,brOutput):
+async def twitchFormat(format,chOutput,brOutput):
     try:
-        if brOutput['stream'] == None:
-            compMSG = "Offline"
+        if format == 'status':
+            if brOutput['stream'] == None:
+                compMSG = "Offline"
+            else:
+                compMSG = discord.Embed(title="[TITLE]",
+                                        colour=discord.Colour(0x8904B1),
+                                        description=brOutput['stream']['channel']['status'])
+                compMSG.set_thumbnail(url=brOutput['stream']['channel']['logo'])
+                compMSG.set_image(url=brOutput['stream']['preview']['medium'])
+                compMSG.set_author(name="{0} is streaming live on Twitch.TV".format(brOutput['stream']['channel']['display_name']),
+                                   url=brOutput['stream']['channel']['url'])
+                embed.add_field(name="[VIEWERS]",
+                                value=brOutput['stream']['viewers'],
+                                inline=True)
+                embed.add_field(name="[GAME]",
+                                value=brOutput['stream']['game'],
+                                inline=True)
+        elif format == 'update':
+            compMSG = "Update"
         else:
-            compMSG = "Online"
+            compMSG = "Invalid format."
     except:
         ReportException()
         return
@@ -94,8 +111,8 @@ class Twitch():
         if tStatus[0] == 1:
             outMSG = "{0} not found on Twitch.".format(username)
         else:
-            outMSG = "{0} found on Twitch and is {1}.".format(tStatus[1]['display_name'],await twitchFormat(tStatus[1],tStatus[2]))
-        await self.bot.say(outMSG)
+            outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
+        await self.bot.send_message(discord.Object(id=ctx.message.channel.id),embed=outMSG)
         return
 
 
