@@ -85,10 +85,10 @@ async def twitchFormat(format,chOutput,brOutput):
                 compMSG.set_image(url=brOutput['stream']['preview']['medium'])
                 compMSG.set_author(name="{0} is streaming live on Twitch.TV".format(brOutput['stream']['channel']['display_name']),
                                    url=brOutput['stream']['channel']['url'])
-                embed.add_field(name="[VIEWERS]",
+                compMSG.add_field(name="[VIEWERS]",
                                 value=brOutput['stream']['viewers'],
                                 inline=True)
-                embed.add_field(name="[GAME]",
+                compMSG.add_field(name="[GAME]",
                                 value=brOutput['stream']['game'],
                                 inline=True)
         elif format == 'update':
