@@ -150,8 +150,7 @@ class Twitter():
                 pass
 
     @commands.command(pass_context=True)
-    @is_owner()
-    async def twitlist(self,ctx):
+    async def tList(self,ctx):
         """Returns all the Twitter accounts being followed on the current server."""
         sqldb1 = MS.connect(host=sqlHost, user=sqlUser, passwd=sqlPass, db=dbname1)
         cur1 = sqldb1.cursor()
@@ -209,8 +208,7 @@ class Twitter():
 ################################################################################################################################
 
     @commands.command(pass_context=True)
-    @is_owner()
-    async def twitadd(self,ctx,*,msg : str):
+    async def tAdd(self,ctx,*,msg : str):
         """Add a Twitter username to the watchlist."""
         try:
             sqldb1 = MS.connect(host=sqlHost,user=sqlUser,passwd=sqlPass,db=dbname1)
@@ -263,8 +261,7 @@ class Twitter():
         return
 
     @commands.command(pass_context=True)
-    @is_owner()
-    async def twitrem(self,ctx,*,msg : str):
+    async def tRem(self,ctx,*,msg : str):
         """Remove a Twitter username from the watchlist."""
         try:
             sqldb1 = MS.connect(host=sqlHost,user=sqlUser,passwd=sqlPass,db=dbname1)
@@ -285,8 +282,7 @@ class Twitter():
         return
 
     @commands.command(pass_context=True)
-    @is_owner()
-    async def tchadd(self,ctx):
+    async def tAddCh(self,ctx):
         """Add a channel to receive tweet updates."""
         try:
             sqldb1 = MS.connect(host=sqlHost,user=sqlUser,passwd=sqlPass,db=dbname1)
@@ -318,8 +314,7 @@ class Twitter():
         return
 
     @commands.command(pass_context=True)
-    @is_owner()
-    async def tchrem(self,ctx):
+    async def tRemCh(self,ctx):
         """Remove a channel from receving tweet updates."""
         try:
             sqldb1 = MS.connect(host=sqlHost,user=sqlUser,passwd=sqlPass,db=dbname1)
@@ -333,25 +328,6 @@ class Twitter():
                         await self.bot.say("`{0} will no longer receive Twitter updates.`".format(ctx.message.channel.name))
                         return
             await self.bot.say("`{0} is not currently receiving Twitter updates.`".format(ctx.message.channel.name))
-        except:
-            await self.bot.say(ReportException())
-        sqldb1.close()
-        return
-
-    @commands.command(pass_context=True)
-    @is_owner()
-    async def tlist(self,ctx):
-        """Lists the current Twitter accounts being followed."""
-        try:
-            sqldb1 = MS.connect(host=sqlHost,user=sqlUser,passwd=sqlPass,db=dbname1)
-            cur1 = sqldb1.cursor()
-            cur1.execute("select username from {0};".format(tblname1))
-            compiled = ""
-            for row in cur1:
-                for username in row:
-                    compiled = "{0}@{1}, ".format(compiled,username)
-            compiled = compiled[:-2]
-            await self.bot.say("`Currently watched Twitter accounts:` {0}".format(compiled))
         except:
             await self.bot.say(ReportException())
         sqldb1.close()

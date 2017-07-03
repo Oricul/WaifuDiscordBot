@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import datetime, discord, json
+import discord, json
 from printoverride import print as print
 from discord.ext import commands
 from platform import python_version
@@ -26,7 +26,6 @@ async def on_ready():
     pversionMSG = "Python3 v{0}".format(python_version())
     appinfo = await bot.application_info()
     ownMSG = "Owner: {0}".format(appinfo.owner)
-    print(dir(appinfo.owner))
     chanMSG = "Servers: {0}".format(len(bot.servers))
     userMSG = "Users: {0}".format(len(list(bot.get_all_members())))
     url = "{0}".format(discord.utils.oauth_url(bot.user.id))

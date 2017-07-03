@@ -63,12 +63,28 @@ def is_owner_check(message):
 
 def is_owner():
     return commands.check(lambda ctx: is_owner_check(ctx.message))
+
+async def twitchGet(username : str,flag = 0,output = None):
+    try:
+        output = twitch.channels.by_name(username)
+    except:
+        flag = 1
+    return [flag,output]
 #----------------------------------------------------------------------------------------------------
 class Twitch():
     def __init__(self,bot):
         self.bot = bot
         print(SQLSetup())
 
+    @commands.command(pass_context=True)
+    async def twitchAdd(self,ctx,username):
+        tStatus = await twitchGet(username)
+        if tStatus[0] == None:
+            await self.bot.say("{0} not found on Twitch.".format(username))
+        else:
+            await self.bot.say("{0} found on Twitch.".format(username))
+            await self.bot.say(tStatus[1])
+        return
 
 
 def setup(bot):
