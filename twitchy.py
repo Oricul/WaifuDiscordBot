@@ -83,11 +83,11 @@ class Twitch():
         if tStatus[0] == 1:
             outMSG = "{0} not found on Twitch.".format(username)
         else:
-            outMSG = "{0} found on Twitch.".format(username)
+            outMSG = "{0} found on Twitch.".format(tStatus[1]['display_name'])
             if tStatus[2]['stream'] == None:
-                outMSG = "{0}\n{1} is offline.".format(outMSG,username)
+                outMSG = "{0}\n{1} is offline.".format(outMSG,tStatus[1]['display_name'])
             else:
-                outMSG = "{0}\n{1} is online.".format(outMSG,username)
+                outMSG = "{0}\n{1} is online.".format(outMSG,tStatus[1]['display_name'])
         await self.bot.say(outMSG)
         return
 
