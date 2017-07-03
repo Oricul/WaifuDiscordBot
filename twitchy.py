@@ -64,12 +64,13 @@ def is_owner_check(message):
 def is_owner():
     return commands.check(lambda ctx: is_owner_check(ctx.message))
 
-async def twitchGet(username : str,flag = 0,output = None):
+async def twitchGet(username : str,flag = 0,chOutput = None,brOutput = None):
     try:
-        output = twitch.channels.by_name(username)
+        chOutput = twitch.channels.by_name(username)
+        brOutput = twitch.streams.by_channel(username)
     except:
         flag = 1
-    return [flag,output]
+    return [flag,chOutput,brOutput]
 #----------------------------------------------------------------------------------------------------
 class Twitch():
     def __init__(self,bot):
@@ -80,10 +81,14 @@ class Twitch():
     async def twitchAdd(self,ctx,username):
         tStatus = await twitchGet(username)
         if tStatus[0] == 1:
-            await self.bot.say("{0} not found on Twitch.".format(username))
+            outMSG = "{0} not found on Twitch.".format(username)
         else:
-            await self.bot.say("{0} found on Twitch.".format(username))
-            await self.bot.say(tStatus[1])
+            outMSG = "{0} found on Twitch.".format(username)
+            if tStatus[2]['stream'] == None:
+                outMSG = "{0}\n{1} is offline.".format(outMSG,username)
+            else:
+                outMSG = "{0}\n{1} is online.".format(outMSG,username)
+        await self.bot.say(outMSG)
         return
 
 
