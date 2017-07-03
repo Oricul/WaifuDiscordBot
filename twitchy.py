@@ -79,8 +79,7 @@ class Twitch():
     @commands.command(pass_context=True)
     async def twitchAdd(self,ctx,username):
         tStatus = await twitchGet(username)
-        await self.bot.say("{0} ||| {1}".format(None,tStatus[0]))
-        if tStatus[0] == None:
+        if tStatus[0] == 1:
             await self.bot.say("{0} not found on Twitch.".format(username))
         else:
             await self.bot.say("{0} found on Twitch.".format(username))
