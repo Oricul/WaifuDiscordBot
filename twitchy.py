@@ -103,7 +103,16 @@ async def twitchFormat(format,chOutput,brOutput):
                                 value=brOutput['stream']['viewers'],
                                 inline=True)
         elif format == 'update':
-            compMSG = "Update"
+            compMSG = discord.Embed(colour=discord.Colour(0x8904B1))
+            compMSG.set_thumbnail(url=brOutput['stream']['channel']['logo'])
+            compMSG.set_author(name="{0} updated their stream info on Twitch.TV".format(brOutput['stream']['channel']['display_name']),
+                               url=brOutput['stream']['channel']['url'])
+            compMSG.add_field(name="[GAME]",
+                              value=brOutput['stream']['game'],
+                              inline=True)
+            compMSG.add_field(name="[VIEWERS]",
+                              value=brOutput['stream']['viewers'],
+                              inline=True)
         else:
             compMSG = "Invalid format."
     except:
@@ -122,7 +131,7 @@ class Twitch():
         if tStatus[0] == 1:
             outMSG = "{0} not found on Twitch.".format(username)
         else:
-            outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
+            outMSG = await twitchFormat('update',tStatus[1],tStatus[2])
         await self.bot.send_message(discord.Object(id=ctx.message.channel.id),embed=outMSG)
         return
 
