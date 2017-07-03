@@ -73,10 +73,13 @@ async def twitchGet(username : str,flag = 0,chOutput = None,brOutput = None):
     return [flag,chOutput,brOutput]
 
 async def twitchFormat(chOutput,brOutput):
-    if brOutput[2]['stream'] == None:
-        compMSG = "Offline"
-    else:
-        compMSG = "Online"
+    try:
+        if brOutput[2]['stream'] == None:
+            compMSG = "Offline"
+        else:
+            compMSG = "Online"
+    except:
+        ReportException()
     return compMSG
 #----------------------------------------------------------------------------------------------------
 class Twitch():
