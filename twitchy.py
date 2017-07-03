@@ -103,7 +103,9 @@ async def twitchFormat(format,chOutput,brOutput):
                                 value=brOutput['stream']['viewers'],
                                 inline=True)
         elif format == 'update':
-            compMSG = discord.Embed(colour=discord.Colour(0x8904B1))
+            compMSG = discord.Embed(title="[TITLE]",
+                                    colour=discord.Colour(0x8904B1),
+                                    description=brOutput['stream']['channel']['status'])
             compMSG.set_thumbnail(url=brOutput['stream']['channel']['logo'])
             compMSG.set_author(name="{0} updated their stream info on Twitch.TV".format(brOutput['stream']['channel']['display_name']),
                                url=brOutput['stream']['channel']['url'])
