@@ -185,7 +185,7 @@ class Twitch():
                                                 if str(server.id) == str(serverid) and str(channel.id) == str(postchanid):
                                                     print("STREAMING: UPDATE INFO: SEND MESSAGE")
                                                     await self.bot.send_message(discord.Object(id=postchanid), embed=outMSG)
-                            cur4.execute("update {0} set game='{1}' title='{2}' where username='{3}';".format(tblname3,tStatus[2]['stream']['game'],tStatus[2]['stream']['channel']['status'],username))
+                            cur4.execute("update {0} set game='{1}', title='{2}' where username='{3}';".format(tblname3,tStatus[2]['stream']['game'],tStatus[2]['stream']['channel']['status'],username))
                 if changed == 0:
                     for username,serverid in cur1:
                         tStatus = await twitchGet(username)
