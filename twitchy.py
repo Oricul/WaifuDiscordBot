@@ -189,6 +189,7 @@ class Twitch():
             except:
                 ReportException()
                 pass
+            print("I'M HERE!!!!!!!!!!!!!!!!!!!!!!")
             await asyncio.sleep(3.5)
 
     @commands.command(pass_context=True)
