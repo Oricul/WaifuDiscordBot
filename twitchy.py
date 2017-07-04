@@ -151,7 +151,7 @@ class Twitch():
                                 sqladdby = 'NULL'
                             whenadd = datetime.datetime.strftime(row[1],"%a, %b %d, %Y %I:%M:%S %p")
                             outMSG = discord.Embed(colour=discord.Colour(0xFFFF00))
-                            outMSG.set_author(name="{0} was already added by <@{1}> on {2} (US/EST).".format(tStatus[1]['display_name'],row[2],whenadd))
+                            outMSG.set_author(name="{0} was already added by <@{1}> on {2} (US/EST).".format(tStatus[1]['display_name'],sqladdby,whenadd))
                             await self.bot.send_message(discord.Object(id=ctx.message.channel.id),embed=outMSG)
                             sqldb1.close()
                             return
