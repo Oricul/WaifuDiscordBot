@@ -169,7 +169,7 @@ class Twitch():
                                         for postchanid in row:
                                             if str(server.id) == str(serverid) and str(channel.id) == str(postchanid):
                                                 await self.bot.send_message(discord.Object(id=postchanid), embed=outMSG)
-                        cur4.execute("update {0} set game='{1}' and title='{2}' where username='{3}';".format(tblname3,tStatus[2]['stream']['game'],tStatus[2]['stream']['status'],username))
+                        cur4.execute("update {0} set game='{1}' and title='{2}' where username='{3}';".format(tblname3,tStatus[2]['stream']['game'],tStatus[2]['stream']['channel']['status'],username))
             if changed == 0:
                 for username,serverid in cur1:
                     tStatus = await twitchGet(username)
@@ -182,7 +182,7 @@ class Twitch():
                                         for postchanid in row:
                                             if str(server.id) == str(serverid) and str(channel.id) == str(postchanid):
                                                 await self.bot.send_message(discord.Object(id=postchanid), embed=outMSG)
-                        cur4.execute("insert into {0} values ('{1}','{2}','{3}');".format(tblname3,username,tStatus[2]['stream']['game'],tStatus[2]['stream']['status']))
+                        cur4.execute("insert into {0} values ('{1}','{2}','{3}');".format(tblname3,username,tStatus[2]['stream']['game'],tStatus[2]['stream']['channel']['status']))
             sqldb1.commit()
             await asyncio.sleep(3.5)
 
