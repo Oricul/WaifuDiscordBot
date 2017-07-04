@@ -148,6 +148,7 @@ class Twitch():
                     pass
                 for username,game,title in cur3:
                     tStatus = await twitchGet(username)
+                    print("{0}\n{1}\n{2}".format(tStatus,tStatus[2],tStatus[2]['stream']))
                     if tStatus[2]['stream'] is None:
                         changed = 1
                         outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
