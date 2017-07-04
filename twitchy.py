@@ -166,6 +166,12 @@ class Twitch():
                         cur4.execute("delete from {0} where username like '{1}';".format(tblname3, username))
                     else:
                         print("{0} ||| {1}\n{2} ||| {3}".format(tStatus[2]['stream']['game'],game,tStatus[2]['stream']['channel']['status'],title))
+                        if tStatus[2]['stream']['game'] is not game:
+                            print("GAME MATCH")
+                        elif tStatus[2]['stream']['channel']['status'] is not title:
+                            print("TITLE MATCH")
+                        else:
+                            print("NO MATCH")
                         if str(tStatus[2]['stream']['game']) != str(game) or str(tStatus[2]['stream']['channel']['status']) != str(title):
                             changed = 1
                             outMSG = await twitchFormat('update',tStatus[1],tStatus[2])
