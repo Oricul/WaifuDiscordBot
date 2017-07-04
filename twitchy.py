@@ -151,7 +151,7 @@ class Twitch():
                 for username,game,title in cur3:
                     print("{0} ||| {1} ||| {2}".format(username,game,title))
                     tStatus = await twitchGet(username)
-                    print("STREAMING: GET STATUS")
+                    print("STREAMING: GET STATUS ||| {0}".format(tStatus[2]['stream']))
                     if tStatus[2]['stream'] is None:
                         changed = 1
                         outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
