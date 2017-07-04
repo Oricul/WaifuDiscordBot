@@ -150,36 +150,41 @@ class Twitch():
                 if tStatus[2]['stream'] == None:
                     changed = 1
                     outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
-                    self.twitchUpdate(cur1,cur2,outMSG)
+                    for origuser, serverid in cur1:
+                        for server in self.bot.servers:
+                            for channel in server.channels:
+                                for row in cur2:
+                                    for postchanid in row:
+                                        if str(server.id) == str(serverid) and str(channel.id) == str(postchanid):
+                                            await self.bot.send_message(discord.Object(id=postchanid), embed=outMSG)
                     cur4.execute("delete from {0} where username like '{1}';".format(tblname3, username))
                 else:
                     if tStatus[2]['stream']['game'] != game or tStatus[2]['stream']['status'] != title:
                         changed = 1
                         outMSG = await twitchFormat('update',tStatus[1],tStatus[2])
-                        self.twitchUpdate(cur1, cur2, outMSG)
+                        for origuser, serverid in cur1:
+                            for server in self.bot.servers:
+                                for channel in server.channels:
+                                    for row in cur2:
+                                        for postchanid in row:
+                                            if str(server.id) == str(serverid) and str(channel.id) == str(postchanid):
+                                                await self.bot.send_message(discord.Object(id=postchanid), embed=outMSG)
                         cur4.execute("update {0} set game='{1}' and title='{2}' where username='{3}';".format(tblname3,tStatus[2]['stream']['game'],tStatus[2]['stream']['status'],username))
             if changed == 0:
                 for username,serverid in cur1:
                     tStatus = await twitchGet(username)
                     if tStatus[2]['stream'] != None:
                         outMSG = await twitchFormat('update',tStatus[1],tStatus[2])
-                        self.twitchUpdate(cur1, cur2, outMSG)
+                        for origuser, serverid in cur1:
+                            for server in self.bot.servers:
+                                for channel in server.channels:
+                                    for row in cur2:
+                                        for postchanid in row:
+                                            if str(server.id) == str(serverid) and str(channel.id) == str(postchanid):
+                                                await self.bot.send_message(discord.Object(id=postchanid), embed=outMSG)
                         cur4.execute("insert into {0} values ('{1}','{2}','{3}');".format(tblname3,username,tStatus[2]['stream']['game'],tStatus[2]['stream']['status']))
             sqldb1.commit()
             await asyncio.sleep(3.5)
-
-
-    @commands.command(hidden=True)
-    async def twitchUpdate(self,cur1,cur2,outMSG):
-        """Hidden command for use by update loop. Not for use by end-users."""
-        for origuser,serverid in cur1:
-            for server in self.bot.servers:
-                for channel in server.channels:
-                    for row in cur2:
-                        for postchanid in row:
-                            if str(server.id) == str(serverid) and str(channel.id) == str(postchanid):
-                                await self.bot.send_message(discord.Object(id=postchanid),embed=outMSG)
-        return
 
     @commands.command(pass_context=True)
     async def twitchAdd(self,ctx,username):
