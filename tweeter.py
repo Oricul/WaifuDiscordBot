@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-import asyncio, datetime, discord, discord.utils, json, linecache, pytz, sys #, twitter
-from peony import PeonyClient as twitter
+import asyncio, datetime, discord, discord.utils, json, linecache, pytz, sys, twitter
+#from peony import PeonyClient as twitter
 from discord.ext import commands
 from printoverride import print
 import MySQLdb as MS
