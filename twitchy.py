@@ -147,6 +147,7 @@ class Twitch():
                     for row in cur1:
                         if row[0].lower() == username.lower() and str(row[3]) == str(ctx.message.server.id):
                             sqladdby = ctx.message.server.get_member(row[2])
+                            print("{0} ||| {1}".format(sqladdby,row[2]))
                             if sqladdby == None:
                                 sqladdby = 'NULL'
                             whenadd = datetime.datetime.strftime(row[1],"%a, %b %d, %Y %I:%M:%S %p")
