@@ -193,6 +193,7 @@ class Twitch():
                         if tStatus[2]['stream'] is not None:
                             outMSG = await twitchFormat('update',tStatus[1],tStatus[2])
                             print("NOT STREAMING: NOW STREAMING")
+                            cur4.execute("insert into {0} values ('{1}','{2}','{3}');".format(tblname3, username, tStatus[2]['stream']['game'],tStatus[2]['stream']['channel']['status']))
                             for origuser, serverid in cur1:
                                 for server in self.bot.servers:
                                     for channel in server.channels:
@@ -201,7 +202,6 @@ class Twitch():
                                                 if str(server.id) == str(serverid) and str(channel.id) == str(postchanid):
                                                     print("NOT STREAMING: NOW STREAMING: SEND MESSAGE")
                                                     await self.bot.send_message(discord.Object(id=postchanid), embed=outMSG)
-                            cur4.execute("insert into {0} values ('{1}','{2}','{3}');".format(tblname3,username,tStatus[2]['stream']['game'],tStatus[2]['stream']['channel']['status']))
                 sqldb1.commit()
             except:
                 ReportException()
