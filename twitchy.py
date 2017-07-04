@@ -27,7 +27,7 @@ def ReportException():
     linecache.checkcache(filename)
     line = linecache.getline(filename,lineno,f.f_globals)
     print('Error on line: {}.\nCode: {}\nException: {}'.format(lineno,line.strip(),exc_obj))
-    return '`FATAL ERROR` on `line:` {}\n`Problem Code:` ```python\n{}\n````Exception Raised:` {}'.format(lineno,line.strip(),exc_obj)
+    return
 
 def SQLSetup():
     try:
@@ -147,7 +147,9 @@ class Twitch():
                 except:
                     ReportException()
                     pass
+                print(cur3)
                 for username,game,title in cur3:
+                    print("{0} ||| {1} ||| {2}".format(username,game,title))
                     tStatus = await twitchGet(username)
                     print("STREAMING: GET STATUS")
                     if tStatus[2]['stream'] is None:
