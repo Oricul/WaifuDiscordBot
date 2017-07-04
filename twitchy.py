@@ -127,9 +127,9 @@ class Twitch():
     def __init__(self,bot):
         self.bot = bot
         print(SQLSetup())
-        self.bot.loop.create_task(self.sendupdatecheck())
+        self.bot.loop.create_task(self.twitchUpdate())
 
-    async def sendupdatecheck(self):
+    async def twitchUpdate(self):
         await self.bot.wait_until_ready()
         while not self.bot.is_closed:
             changed = 0
