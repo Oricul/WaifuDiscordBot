@@ -148,7 +148,7 @@ class Twitch():
                     pass
                 for username,game,title in cur3:
                     tStatus = await twitchGet(username)
-                    if tStatus[2]['stream'] == None:
+                    if tStatus[2]['stream'] is None:
                         changed = 1
                         outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
                         for origuser, serverid in cur1:
