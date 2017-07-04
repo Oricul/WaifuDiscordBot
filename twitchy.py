@@ -40,7 +40,7 @@ def SQLSetup():
                 return "MySQL: Failed to create database '{0}'".format(dbname1)
             else:
                 sqlcmd1 = cur1.execute("use {0}".format(dbname1))
-                sqlcmd1 = cur1.execute("create table {0} (username VARCHAR(20), adddate DATETIME, addedby VARCHAR(20))".format(tblname1))
+                sqlcmd1 = cur1.execute("create table {0} (username VARCHAR(20), adddate DATETIME, addedby BIGINT, serverid BIGINT)".format(tblname1))
                 sqlcmd1 = cur1.execute("create table {0} (channelid BIGINT, adddate DATETIME, addedby VARCHAR(20))".format(tblname2))
                 sqlcmd1 = cur1.execute("create table {0} (username VARCHAR(20), game VARCHAR(60), title VARCHAR(100))".format(tblname3))
                 return "MySQL: Created database '{0}' and tables '{1}', '{2}', '{3}'.".format(dbname1,tblname1,tblname2,tblname3)
@@ -139,7 +139,41 @@ class Twitch():
             outMSG = discord.Embed(colour=discord.Colour(0xFF0000))
             outMSG.set_author(name="{0} not found on Twitch.TV".format(username))
         else:
-            outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
+            try:
+                sqldb1 = MS.connect(host=sqlHost,user=sqlUser,passwd=sqlPass,db=dbname1)
+                cur1 = sqldb1.cursor()
+                try:
+                    cur1.execute("select * from {0};".format(tblname1))
+                    for row in cur1:
+                        if row[0] == username and str(row[3]) == str(ctx.message.server.id):
+                            sqladdby = ctx.message.server.get_member(row[2])
+                            if sqladdby == None:
+                                sqladdby = 'NULL'
+                            whenadd = datetime.datetime.strftime(row[1],"%a, %b %d, %Y %I:%M:%S %p")
+                            outMSG = discord.Embed(colour=discord.Colour(0xFFFF00))
+                            outMSG.set_author(name="{0} was already added by {1} on {2} (US/EST).".format(tStatus[1]['display_name'],sqladdby,whenadd))
+                            await self.bot.send_message(discord.Object(id=ctx.message.channel.id),embed=outMSG)
+                            sqldb1.close()
+                            return
+                    TwitchAddTime = str(datetime.datetime.now())
+                    TwitchAddTime = TwitchAddTime[:-7]
+                    try:
+                        cur1.execute("insert into {0} values ('{1}','{2}','{3}','{4}')".format(tblname1,tStatus[1]['display_name'],TwitchAddTime,ctx.message.author.id,ctx.message.server.id))
+                        sqldb1.commit()
+                    except:
+                        ReportException()
+                        await self.bot.say("An error has been reported to the bot's owners.")
+                        return
+                    outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
+                    await self.bot.say("`Added {0} to the Twitch.TV watchlist.`".format(tStatus[1]['display_name']))
+                except:
+                    ReportException()
+                    await self.bot.say("An error has been reported to the bot's owners.")
+                    return
+            except:
+                ReportException()
+                await self.bot.say("An error has been reported to the bot's owners.")
+                return
         await self.bot.send_message(discord.Object(id=ctx.message.channel.id),embed=outMSG)
         return
 
