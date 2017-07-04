@@ -167,7 +167,7 @@ class Twitch():
                     else:
                         print("{0} ||| {1}\n{2} ||| {3}".format(tStatus[2]['stream']['game'],game,tStatus[2]['stream']['channel']['status'],title))
                         if str(tStatus[2]['stream']['game']) is not str(game):
-                            print("GAME MATCH\n||| {0} ||| {1} |||".format(tStatus[2]['stream']['game'],game))
+                            print("GAME MATCH\n||| {0} ||| {1} |||\n||| {2} ||| {3} |||".format(tStatus[2]['stream']['game'],game,len(tStatus[2]['stream']['game']),len(game)))
                         elif tStatus[2]['stream']['channel']['status'] is not title:
                             print("TITLE MATCH")
                         else:
