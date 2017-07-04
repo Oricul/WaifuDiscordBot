@@ -148,28 +148,31 @@ class Twitch():
                     pass
                 for username,game,title in cur3:
                     tStatus = await twitchGet(username)
-                    print("{0}\n{1}\n{2}".format(tStatus,tStatus[2],tStatus[2]['stream']))
                     if tStatus[2]['stream'] is None:
                         changed = 1
                         outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
+                        print("STREAMING: NO LONGER STREAMING")
                         for origuser, serverid in cur1:
                             for server in self.bot.servers:
                                 for channel in server.channels:
                                     for row in cur2:
                                         for postchanid in row:
                                             if str(server.id) == str(serverid) and str(channel.id) == str(postchanid):
+                                                print("STREAMING: NO LONGER STREAMING: SEND MESSAGE")
                                                 await self.bot.send_message(discord.Object(id=postchanid), embed=outMSG)
                         cur4.execute("delete from {0} where username like '{1}';".format(tblname3, username))
                     else:
                         if tStatus[2]['stream']['game'] != game or tStatus[2]['stream']['channel']['status'] != title:
                             changed = 1
                             outMSG = await twitchFormat('update',tStatus[1],tStatus[2])
+                            print("STREAMING: UPDATE INFO")
                             for origuser, serverid in cur1:
                                 for server in self.bot.servers:
                                     for channel in server.channels:
                                         for row in cur2:
                                             for postchanid in row:
                                                 if str(server.id) == str(serverid) and str(channel.id) == str(postchanid):
+                                                    print("STREAMING: UPDATE INFO: SEND MESSAGE")
                                                     await self.bot.send_message(discord.Object(id=postchanid), embed=outMSG)
                             cur4.execute("update {0} set game='{1}' and title='{2}' where username='{3}';".format(tblname3,tStatus[2]['stream']['game'],tStatus[2]['stream']['channel']['status'],username))
                 if changed == 0:
@@ -177,12 +180,14 @@ class Twitch():
                         tStatus = await twitchGet(username)
                         if tStatus[2]['stream'] != None:
                             outMSG = await twitchFormat('update',tStatus[1],tStatus[2])
+                            print("NOT STREAMING: NOW STREAMING")
                             for origuser, serverid in cur1:
                                 for server in self.bot.servers:
                                     for channel in server.channels:
                                         for row in cur2:
                                             for postchanid in row:
                                                 if str(server.id) == str(serverid) and str(channel.id) == str(postchanid):
+                                                    print("NOT STREAMING: NOW STREAMING: SEND MESSAGE")
                                                     await self.bot.send_message(discord.Object(id=postchanid), embed=outMSG)
                             cur4.execute("insert into {0} values ('{1}','{2}','{3}');".format(tblname3,username,tStatus[2]['stream']['game'],tStatus[2]['stream']['channel']['status']))
                 sqldb1.commit()
