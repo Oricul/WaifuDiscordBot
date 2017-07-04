@@ -159,7 +159,7 @@ class Twitch():
                                             await self.bot.send_message(discord.Object(id=postchanid), embed=outMSG)
                     cur4.execute("delete from {0} where username like '{1}';".format(tblname3, username))
                 else:
-                    if tStatus[2]['stream']['game'] != game or tStatus[2]['stream']['status'] != title:
+                    if tStatus[2]['stream']['game'] != game or tStatus[2]['stream']['channel']['status'] != title:
                         changed = 1
                         outMSG = await twitchFormat('update',tStatus[1],tStatus[2])
                         for origuser, serverid in cur1:
