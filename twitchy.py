@@ -149,9 +149,8 @@ class Twitch():
                     pass
                 print(cur3)
                 for username,game,title in cur3:
-                    print("{0} ||| {1} ||| {2}".format(username,game,title))
                     tStatus = await twitchGet(username)
-                    print("STREAMING: GET STATUS ||| {0}".format(tStatus[2]['stream']))
+                    print("STREAMING: GET STATUS")
                     if tStatus[2]['stream'] is None:
                         changed = 1
                         outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
@@ -166,6 +165,7 @@ class Twitch():
                                                 await self.bot.send_message(discord.Object(id=postchanid), embed=outMSG)
                         cur4.execute("delete from {0} where username like '{1}';".format(tblname3, username))
                     else:
+                        print("{0} ||| {1}\n{2} ||| {3}".format(tStatus[2]['stream']['game'],game,tStatus[2]['stream']['channel']['status'],title))
                         if tStatus[2]['stream']['game'] != game or tStatus[2]['stream']['channel']['status'] != title:
                             changed = 1
                             outMSG = await twitchFormat('update',tStatus[1],tStatus[2])
