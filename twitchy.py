@@ -284,6 +284,37 @@ class Twitch():
         await self.bot.say("`{0} is not currently receiving Twitch.TV updates.".format(ctx.message.channel.name))
         sqldb1.close()
         return
+
+    @commands.command(pass_context=True)
+    async def twitchList(self,ctx):
+        """Lists the Twitch.TV streams being watched in this server.
+
+        Usage: ori.twitchList"""
+        try:
+            sqldb1 = MS.connect(host=sqlHost,user=sqlUser,passwd=sqlPass,db=dbname1)
+            cur1 = sqldb1.cursor()
+            cur1.execute("select * from {0}".format(tblname1))
+        except:
+            ReportException()
+            try:
+                sqldb1.close()
+            except:
+                pass
+            await self.bot.say("An error has been reported to the bot's owners.")
+            return
+        compmsg = ""
+        for username,adddate,addedby,serverid in cur1:
+            if str(ctx.message.server.id) == str(serverid)
+                sqladdby = ctx.message.server.get_member(addedby)
+                if sqladdby == None:
+                    sqladdby = 'NULL'
+                whenadd = datetime.datetime.strftime(adddate,"%a, %b %d, %Y %I:%M:%S %p")
+                compmsg = "{0}Add Date: {1}, Username: {2}, Added By: <@{3}>\n".format(compmsg,whenadd,username,addedby)
+                if len(compmsg) > 1500:
+                    await self.bot.say(compmsg)
+                    compmsg = ""
+        await self.bot.say(compmsg)
+        return
 #----------------------------------------------------------------------------------------------------
 def setup(bot):
     bot.add_cog(Twitch(bot))
