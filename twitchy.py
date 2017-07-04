@@ -142,23 +142,24 @@ class Twitch():
             try:
                 sqldb1 = MS.connect(host=sqlHost,user=sqlUser,passwd=sqlPass,db=dbname1)
                 cur1 = sqldb1.cursor()
+                username = username.lower()
                 try:
                     cur1.execute("select * from {0};".format(tblname1))
                     for row in cur1:
-                        if row[0].lower() == username.lower() and str(row[3]) == str(ctx.message.server.id):
+                        if row[0].lower() == username and str(row[3]) == str(ctx.message.server.id):
                             sqladdby = ctx.message.server.get_member(str(row[2]))
                             if sqladdby == None:
                                 sqladdby = 'NULL'
                             whenadd = datetime.datetime.strftime(row[1],"%a, %b %d, %Y %I:%M:%S %p")
                             outMSG = discord.Embed(colour=discord.Colour(0xFFFF00))
-                            outMSG.set_author(name="{0} was already added by <@{1}> on {2} (US/EST).".format(tStatus[1]['display_name'],sqladdby,whenadd))
+                            outMSG.set_author(name="{0} was already added by {1} on {2} (US/EST).".format(tStatus[1]['display_name'],sqladdby,whenadd))
                             await self.bot.send_message(discord.Object(id=ctx.message.channel.id),embed=outMSG)
                             sqldb1.close()
                             return
                     TwitchAddTime = str(datetime.datetime.now())
                     TwitchAddTime = TwitchAddTime[:-7]
                     try:
-                        cur1.execute("insert into {0} values ('{1}','{2}','{3}','{4}')".format(tblname1,tStatus[1]['display_name'],TwitchAddTime,ctx.message.author.id,ctx.message.server.id))
+                        cur1.execute("insert into {0} values ('{1}','{2}','{3}','{4}')".format(tblname1,username,TwitchAddTime,ctx.message.author.id,ctx.message.server.id))
                         sqldb1.commit()
                     except:
                         ReportException()
@@ -177,6 +178,35 @@ class Twitch():
         await self.bot.send_message(discord.Object(id=ctx.message.channel.id),embed=outMSG)
         return
 
+    @commands.command(pass_context=True)
+    async def twitchRem(self,ctx,username):
+        """Remove a Twitch username from this server's watchlist.
+
+        Usage: ori.twitchRem <username>
+        Example: ori.twitchRem monstercat"""
+        username = username.lower()
+        try:
+            sqldb1 = MS.connect(host=sqlHost,user=sqlUser,passwd=sqlPass,db=dbname1)
+            cur1 = sqldb1.cursor()
+            cur1.execute("select username,serverid from {0};".format(tblname1))
+        except:
+            ReportException()
+            await self.bot.say("An error has been reported to the bot's owners.")
+            return
+        for sqluser,serverid in cur1:
+            if sqluser.lower() == username and str(serverid) == str(ctx.message.server.id):
+                try:
+                    cur1.execute("delete from {0} where username like '{1}' and serverid like '{2}';".format(tblname1,username,ctx.message.server.id))
+                    sqldb1.commit()
+                except:
+                    ReportException()
+                    await self.bot.say("An error has been reported to the bot's owners.")
+                    return
+                await self.bot.say("`Removed {0} from this server's Twitch.TV watchlist.`".format(username))
+                return
+        sqldb1.close()
+        await self.bot.say("`{0} is not currently on this server's Twitch.TV watchlist.".format(username))
+        return
 
 def setup(bot):
     bot.add_cog(Twitch(bot))
