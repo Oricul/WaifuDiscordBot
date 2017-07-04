@@ -208,5 +208,82 @@ class Twitch():
         await self.bot.say("`{0} is not currently on this server's Twitch.TV watchlist.".format(username))
         return
 
+    @commands.command(pass_context=True)
+    async def twitchAddCh(self,ctx):
+        """Adds the current channel to post updates for Twitch.TV
+
+        Usage: ori.twitchAddCh"""
+        try:
+            sqldb1 = MS.connect(host=sqlHost,user=sqlUser,passwd=sqlPass,db=dbname1)
+            cur1 = sqldb1.cursor()
+        except:
+            sqldb1.close()
+            ReportException()
+            await self.bot.say("An error has been reported to the bot's owners.")
+            return
+        try:
+            cur1.execute("select * from {0};".format(tblname2))
+        except:
+            sqldb1.close()
+            ReportException()
+            await self.bot.say("An error has been reported to the bot's owners.")
+            return
+        for channelid,adddate,addedby in cur1:
+            if str(channelid) == str(ctx.message.channel.id)
+                sqladdby = ctx.message.server.get_member(addedby)
+                if sqladdby == None:
+                    sqladdby = 'NULL'
+                whenadd = datetime.datetime.strftime(adddate,"%a, %b %d, %Y %I:%M:%S %p")
+                await self.bot.say("`{0} was already added by {1} on {2} (US/EST).`".format(ctx.message.channel.name,sqladdby,whenadd))
+                sqldb1.close()
+                return
+        convCurTime = str(datetime.datetime.now())
+        convCurTime = convCurTime[:-7]
+        try:
+            cur1.execute("insert into {0} values ('{1}','{2}','{3}')".format(tblname2,ctx.message.channel.id,convCurTime,ctx.message.author.id))
+            sqldb1.commit()
+        except:
+            sqldb1.close()
+            ReportException()
+            await self.bot.say("An error has been reported to the bot's owners.")
+            return
+        await self.bot.say("`{0} will now receive Twitch.TV updates.`".format(ctx.message.channel.name))
+        sqldb1.close()
+        return
+
+    @commands.command(pass_context=True)
+    async def twitchRemCh(self,ctx):
+        """Remove the current channel from receiving Twitch.TV updates.
+
+        Usage: ori.twitchRemCh"""
+        try:
+            sqldb1 = MS.connect(host=sqlHost,user=sqlUser,passwd=sqlPass,db=dbname1)
+            cur1 = sqldb1.cursor()
+            cur1.execute("select channelid from {0};".format(tblname2))
+        except:
+            try:
+                sqldb1.close()
+            except:
+                pass
+            ReportException()
+            await self.bot.say("An error has been reported to the bot's owners.")
+            return
+        for row in cur1:
+            for channelid in row:
+                if str(channelid) == str(ctx.message.channel.id):
+                    try:
+                        cur1.execute("delete from {0} where channelid like '{1}';".format(tblname2,ctx.message.channel.id))
+                        sqldb1.commit()
+                    except:
+                        ReportException()
+                        sqldb1.close()
+                        await self.bot.say("An error has been reported to the bot's owners.")
+                        return
+                    await self.bot.say("`{0} will no longer receive Twitch.TV updates.`".format(ctx.message.channel.name))
+                    return
+        await self.bot.say("`{0} is not currently receiving Twitch.TV updates.".format(ctx.message.channel.name))
+        sqldb1.close()
+        return
+#----------------------------------------------------------------------------------------------------
 def setup(bot):
     bot.add_cog(Twitch(bot))
