@@ -143,11 +143,13 @@ class Twitch():
                     cur3 = sqldb1.cursor()
                     cur3.execute("select * from {0}".format(tblname3))
                     cur4 = sqldb1.cursor()
+                    print("SQL CONF")
                 except:
                     ReportException()
                     pass
                 for username,game,title in cur3:
                     tStatus = await twitchGet(username)
+                    print("STREAMING: GET STATUS")
                     if tStatus[2]['stream'] is None:
                         changed = 1
                         outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
@@ -178,7 +180,8 @@ class Twitch():
                 if changed == 0:
                     for username,serverid in cur1:
                         tStatus = await twitchGet(username)
-                        if tStatus[2]['stream'] != None:
+                        print("NOT STREAMING: GET STATUS")
+                        if tStatus[2]['stream'] is not None:
                             outMSG = await twitchFormat('update',tStatus[1],tStatus[2])
                             print("NOT STREAMING: NOW STREAMING")
                             for origuser, serverid in cur1:
