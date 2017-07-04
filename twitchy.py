@@ -146,7 +146,7 @@ class Twitch():
                     cur1.execute("select * from {0};".format(tblname1))
                     for row in cur1:
                         if row[0].lower() == username.lower() and str(row[3]) == str(ctx.message.server.id):
-                            sqladdby = ctx.message.server.get_member(row[2])
+                            sqladdby = ctx.message.server.get_member(str(row[2]))
                             print("{0} ||| {1}".format(sqladdby,row[2]))
                             if sqladdby == None:
                                 sqladdby = 'NULL'
