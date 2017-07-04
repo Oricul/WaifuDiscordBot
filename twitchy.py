@@ -229,7 +229,7 @@ class Twitch():
             await self.bot.say("An error has been reported to the bot's owners.")
             return
         for channelid,adddate,addedby in cur1:
-            if str(channelid) == str(ctx.message.channel.id)
+            if str(channelid) == str(ctx.message.channel.id):
                 sqladdby = ctx.message.server.get_member(addedby)
                 if sqladdby == None:
                     sqladdby = 'NULL'
