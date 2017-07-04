@@ -304,7 +304,7 @@ class Twitch():
             return
         compmsg = ""
         for username,adddate,addedby,serverid in cur1:
-            if str(ctx.message.server.id) == str(serverid)
+            if str(ctx.message.server.id) == str(serverid):
                 sqladdby = ctx.message.server.get_member(addedby)
                 if sqladdby == None:
                     sqladdby = 'NULL'
