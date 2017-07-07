@@ -128,6 +128,8 @@ class Twitch():
         self.bot = bot
         print(SQLSetup())
         #self.bot.loop.create_task(self.twitchUpdate())
+
+    async def main(self):
         await self.twitchUpdate()
 
     async def twitchUpdate(self):
