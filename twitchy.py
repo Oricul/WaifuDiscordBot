@@ -165,6 +165,7 @@ class Twitch():
                                                 for postchanid in row:
                                                     if str(origuser) == str(username3) and str(server.id) == str(server1) and str(channel.id) == str(postchanid):
                                                         await self.bot.send_message(discord.Object(id=postchanid),embed=outMSG)
+                                                        await asyncio.sleep(3.5)
                             else:
                                 tGame = tStatus[2]['stream']['game']
                                 tTitle = tStatus[2]['stream']['channel']['status']
@@ -178,8 +179,10 @@ class Twitch():
                                                     for postchanid in row:
                                                         if str(origuser) == str(username3) and str(server.id) == str(server1) and str(channel.id) == str(postchanid):
                                                             await self.bot.send_message(discord.Object(id=postchanid),embed=outMSG)
+                                                            await asyncio.sleep(3.5)
                     if changed == 0:
                         if tStatus[2]['stream'] is not None:
+                            changed = 1
                             outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
                             cursor.execute("INSERT INTO {0} VALUES ('{1}','{2}','{3}');".format(tblname3,username1,tStatus[2]['stream']['game'],tStatus[2]['stream']['channel']['status']))
                             for origuser, server1 in cur1:
@@ -189,6 +192,7 @@ class Twitch():
                                             for postchanid in row:
                                                 if str(origuser) == str(username1) and str(server.id) == str(server1) and str(channel.id) == str(postchanid):
                                                     await self.bot.send_message(discord.Object(id=postchanid), embed=outMSG)
+                                                    await asyncio.sleep(3.5)
             except:
                 ReportException()
                 try:
@@ -196,8 +200,11 @@ class Twitch():
                 except:
                     pass
                 break
-            sqldb1.commit()
-            await asyncio.sleep(3.5)
+            if changed == 0:
+                sqldb1.close()
+            else:
+                sqldb1.commit()
+                await asyncio.sleep(3.5)
 
     @commands.command(pass_context=True)
     async def twitchAdd(self,ctx,username):

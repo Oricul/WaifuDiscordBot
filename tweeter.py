@@ -117,7 +117,6 @@ class Twitter():
         self.bot.loop.create_task(self.sendupdatecheck())
 
     async def sendupdatecheck(self):
-        global twitdelay
         await self.bot.wait_until_ready()
         while not self.bot.is_closed:
             try:
