@@ -135,22 +135,13 @@ class Twitch():
             try:
                 try:
                     sqldb1 = MS.connect(host=sqlHost,user=sqlUser,passwd=sqlPass,db=dbname1)
+                    cur1 = sqldb1.cursor()
+                    cur2 = sqldb1.cursor()
+                    cur3 = sqldb1.cursor()
                     cursor = sqldb1.cursor()
-                    cursor.execute("SELECT username,serverid FROM {0};".format(tblname1))
-                    cur1 = cursor
-                    sqldb1.close()
-                    sqldb1 = MS.connect(host=sqlHost, user=sqlUser, passwd=sqlPass, db=dbname1)
-                    cursor = sqldb1.cursor()
-                    cursor.execute("SELECT channelid FROM {0};".format(tblname2))
-                    cur2 = cursor
-                    sqldb1.close()
-                    sqldb1 = MS.connect(host=sqlHost, user=sqlUser, passwd=sqlPass, db=dbname1)
-                    cursor = sqldb1.cursor()
-                    cursor.execute("SELECT * FROM {0}".format(tblname3))
-                    cur3 = cursor
-                    sqldb1.close()
-                    sqldb1 = MS.connect(host=sqlHost, user=sqlUser, passwd=sqlPass, db=dbname1)
-                    cursor = sqldb1.cursor()
+                    cur1.execute("SELECT username,serverid FROM {0};".format(tblname1))
+                    cur2.execute("SELECT channelid FROM {0};".format(tblname2))
+                    cur3.execute("SELECT * FROM {0}".format(tblname3))
                     print("SQL CONFIGURATION")
                 except:
                     ReportException()
