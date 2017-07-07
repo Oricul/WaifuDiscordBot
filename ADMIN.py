@@ -35,7 +35,7 @@ class ADMIN():
     @commands.command(pass_context=True,hidden=True)
     @is_owner()
     async def ping(self,ctx):
-        await self.bot.say("Pong! ({0}.{1})".format((datetime.datetime.now()-ctx.message.timestamp).seconds,(datetime.datetime.now()-ctx.message.timestamp).microseconds[:2]))
+        await self.bot.say("Pong! ({0}.{1})".format((datetime.datetime.now()-ctx.message.timestamp).seconds,str((datetime.datetime.now()-ctx.message.timestamp).microseconds)[:2]))
         return
 
     @commands.command(pass_context=True, hidden=True)
