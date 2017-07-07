@@ -127,7 +127,8 @@ class Twitch():
     def __init__(self,bot):
         self.bot = bot
         print(SQLSetup())
-        self.bot.loop.create_task(self.twitchUpdate())
+        #self.bot.loop.create_task(self.twitchUpdate())
+        self.twitchUpdate()
 
     async def twitchUpdate(self):
         await self.bot.wait_until_ready()
@@ -204,7 +205,7 @@ class Twitch():
                 sqldb1.close()
             else:
                 sqldb1.commit()
-                await asyncio.sleep(3.5)
+            await asyncio.sleep(3.5)
 
     @commands.command(pass_context=True)
     async def twitchAdd(self,ctx,username):
