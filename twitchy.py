@@ -80,7 +80,7 @@ async def twitchFormat(format,chOutput,brOutput):
                                         colour=discord.Colour(0x4C0B5F),
                                         description=chOutput['updated_at'])
                 compMSG.set_thumbnail(url=chOutput['logo'])
-                compMSG.set_author(name="{0} is not currently streaming on Twitch.TV".format(chOutput['display_name']),
+                compMSG.set_author(name="{0} is no longer streaming on Twitch.TV".format(chOutput['display_name']),
                                    url=chOutput['url'])
                 compMSG.add_field(name="[FOLLOWERS]",
                                   value=chOutput['followers'],
@@ -142,26 +142,20 @@ class Twitch():
                     cur1.execute("SELECT username,serverid FROM {0};".format(tblname1))
                     cur2.execute("SELECT channelid FROM {0};".format(tblname2))
                     cur3.execute("SELECT * FROM {0}".format(tblname3))
-                    print("SQL CONFIGURATION")
                 except:
                     ReportException()
                     try:
-                        print("Closing Database connection")
                         sqldb1.close()
                     except:
                         pass
                     break
                 for username1,serverid in cur1:
-                    print("Cycling 'watchlist' : {0}.".format(username1))
                     changed = 0
                     tStatus = await twitchGet(username1)
                     for username3, game, title in cur3:
-                        print("Cycling 'online' : {0}.".format(username3))
                         if username1 == username3:
-                            print("Found 'watchlist' user in 'online'. {0} : {1}".format(username1,username3))
                             changed = 1
                             if tStatus[2]['stream'] is None:
-                                print("User is no longer streaming. {0}".format(username3))
                                 outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
                                 cursor.execute("DELETE FROM {0} WHERE username LIKE '{1}'".format(tblname3,username3))
                                 for origuser,server1 in cur1:
@@ -170,14 +164,11 @@ class Twitch():
                                             for row in cur2:
                                                 for postchanid in row:
                                                     if str(origuser) == str(username3) and str(server.id) == str(server1) and str(channel.id) == str(postchanid):
-                                                        print("User is no longer streaming, matched username, server id and channel id. Sending message.")
                                                         await self.bot.send_message(discord.Object(id=postchanid),embed=outMSG)
                             else:
-                                print("User is still streaming. {0}".format(username3))
                                 tGame = tStatus[2]['stream']['game']
                                 tTitle = tStatus[2]['stream']['channel']['status']
                                 if str(tGame) != str(game) or str(tTitle) != str(title):
-                                    print("User is still streaming and has changed either game or status.")
                                     outMSG = await twitchFormat('update',tStatus[1],tStatus[2])
                                     cursor.execute("UPDATE {0} SET game='{1}', title='{2}' WHERE username='{3}';".format(tblname3,tGame,tTitle,username3))
                                     for origuser,server1 in cur1:
@@ -186,12 +177,9 @@ class Twitch():
                                                 for row in cur2:
                                                     for postchanid in row:
                                                         if str(origuser) == str(username3) and str(server.id) == str(server1) and str(channel.id) == str(postchanid):
-                                                            print("User is still streaming with updated info, matched username, server id and channel id. Sending message.")
                                                             await self.bot.send_message(discord.Object(id=postchanid),embed=outMSG)
                     if changed == 0:
-                        print("User is not streaming. {0}".format(username1))
                         if tStatus[2]['stream'] is not None:
-                            print("User is now streaming. {0}".format(username1))
                             outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
                             cursor.execute("INSERT INTO {0} VALUES ('{1}','{2}','{3}');".format(tblname3,username1,tStatus[2]['stream']['game'],tStatus[2]['stream']['channel']['status']))
                             for origuser, server1 in cur1:
@@ -200,8 +188,6 @@ class Twitch():
                                         for row in cur2:
                                             for postchanid in row:
                                                 if str(origuser) == str(username1) and str(server.id) == str(server1) and str(channel.id) == str(postchanid):
-                                                    print("User is now streaming, matched username, server id and channel id. Sending message.")
-                                                    print(outMSG)
                                                     await self.bot.send_message(discord.Object(id=postchanid), embed=outMSG)
             except:
                 ReportException()
@@ -251,6 +237,9 @@ class Twitch():
                         await self.bot.say("An error has been reported to the bot's owners.")
                         return
                     outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
+                    if tStatus[2]['stream'] is None:
+                        outMSG.set_author(name="{0} is not currently streaming on Twitch.TV".format(tStatus[1]['display_name']),
+                                          url=tStatus[1]['url'])
                     await self.bot.say("`Added {0} to the Twitch.TV watchlist.`".format(tStatus[1]['display_name']))
                 except:
                     ReportException()
