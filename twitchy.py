@@ -150,7 +150,8 @@ class Twitch():
                     except:
                         pass
                     break
-                print(cur1)
+                for i in cur1:
+                    print(i)
                 for username1,serverid in cur1:
                     print("Cycling 'watchlist' : {0}.".format(username1))
                     changed = 0
