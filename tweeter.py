@@ -47,7 +47,7 @@ def ReportException():
     linecache.checkcache(filename)
     line = linecache.getline(filename,lineno,f.f_globals)
     print('Error on line: {}.\nCode: {}\nException: {}'.format(lineno,line.strip(),exc_obj))
-    return '`FATAL ERROR` on `line:` {}\n`Problem Code:` ```python\n{}\n````Exception Raised:` {}'.format(lineno,line.strip(),exc_obj)
+    return
 
 def SQLSetup():
     try:
@@ -130,7 +130,7 @@ class Twitter():
                     try:
                         status = twitapi.GetUserTimeline(screen_name=username,count=200,include_rts=False,exclude_replies=True)
                     except:
-                        print("Twitter Exception: {0}\n\nContinuing...".format(ReportException()))
+                        ReportException()
                         pass
                     preConvTwitTime = datetime.datetime.strptime(status[0].created_at,"%a %b %d %H:%M:%S %z %Y").replace(tzinfo = pytz.FixedOffset(+0000)).astimezone(pytz.timezone('America/New_York'))
                     convTwitTime = datetime.datetime.strftime(preConvTwitTime,"%Y-%m-%d %H:%M:%S")
