@@ -141,7 +141,8 @@ class Twitch():
                     cursor.execute("SELECT channelid FROM {0};".format(tblname2))
                     cur2 = cursor
                     cursor.execute("SELECT * FROM {0}".format(tblname3))
-                    cur3 = cursor                        print("SQL CONFIGURATION")
+                    cur3 = cursor
+                    print("SQL CONFIGURATION")
                 except:
                     ReportException()
                     try:
