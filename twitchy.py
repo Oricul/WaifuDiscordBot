@@ -133,80 +133,81 @@ class Twitch():
         await self.bot.wait_until_ready()
         while not self.bot.is_closed:
             try:
-                changed = 0
                 try:
                     sqldb1 = MS.connect(host=sqlHost,user=sqlUser,passwd=sqlPass,db=dbname1)
-                    cur1 = sqldb1.cursor()
-                    cur1.execute("select username,serverid from {0}".format(tblname1))
-                    cur2 = sqldb1.cursor()
-                    cur2.execute("select channelid from {0}".format(tblname2))
-                    cur3 = sqldb1.cursor()
-                    cur3.execute("select * from {0}".format(tblname3))
-                    cur4 = sqldb1.cursor()
-                    print("SQL CONF")
+                    cursor = sqldb1.cursor()
+                    cursor.execute("SELECT username,serverid FROM {0};".format(tblname1))
+                    cur1 = cursor
+                    cursor.execute("SELECT channelid FROM {0};".format(tblname2))
+                    cur2 = cursor
+                    cursor.execute("SELECT * FROM {0}".format(tblname3))
+                    cur3 = cursor                        print("SQL CONFIGURATION")
                 except:
                     ReportException()
-                    pass
-                print(cur3)
-                for username,game,title in cur3:
-                    tStatus = await twitchGet(username)
-                    print("STREAMING: GET STATUS")
-                    if tStatus[2]['stream'] is None:
-                        changed = 1
-                        outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
-                        print("STREAMING: NO LONGER STREAMING")
-                        for origuser, serverid in cur1:
-                            for server in self.bot.servers:
-                                for channel in server.channels:
-                                    for row in cur2:
-                                        for postchanid in row:
-                                            if str(server.id) == str(serverid) and str(channel.id) == str(postchanid):
-                                                print("STREAMING: NO LONGER STREAMING: SEND MESSAGE")
-                                                await self.bot.send_message(discord.Object(id=postchanid), embed=outMSG)
-                        cur4.execute("delete from {0} where username like '{1}';".format(tblname3, username))
-                    else:
-                        print("{0} ||| {1}\n{2} ||| {3}".format(tStatus[2]['stream']['game'],game,tStatus[2]['stream']['channel']['status'],title))
-                        trygame = tStatus[2]['stream']['game']
-                        if str(trygame) is not str(game):
-                            print("GAME MATCH\n||| {0} ||| {1} |||\n||| {2} ||| {3} |||".format(tStatus[2]['stream']['game'],game,len(tStatus[2]['stream']['game']),len(game)))
-                        elif tStatus[2]['stream']['channel']['status'] is not title:
-                            print("TITLE MATCH")
-                        else:
-                            print("NO MATCH")
-                        if str(tStatus[2]['stream']['game']) != str(game) or str(tStatus[2]['stream']['channel']['status']) != str(title):
+                    try:
+                        sqldb1.close()
+                    except:
+                        pass
+                    break
+                for username1,serverid in cur1:
+                    print("Cycling 'watchlist' : {0}.".format(username1))
+                    changed = 0
+                    tStatus = await twitchGet(username1)
+                    for username3, game, title in cur3:
+                        print("Cycling 'online' : {0}.".format(username3))
+                        if username1 == username3:
+                            print("Found 'watchlist' user in 'online'. {0} : {1}".format(username1,username3))
                             changed = 1
-                            outMSG = await twitchFormat('update',tStatus[1],tStatus[2])
-                            print("STREAMING: UPDATE INFO")
-                            for origuser, serverid in cur1:
-                                for server in self.bot.servers:
-                                    for channel in server.channels:
-                                        for row in cur2:
-                                            for postchanid in row:
-                                                if str(server.id) == str(serverid) and str(channel.id) == str(postchanid):
-                                                    print("STREAMING: UPDATE INFO: SEND MESSAGE")
-                                                    await self.bot.send_message(discord.Object(id=postchanid), embed=outMSG)
-                            cur4.execute("update {0} set game='{1}', title='{2}' where username='{3}';".format(tblname3,tStatus[2]['stream']['game'],tStatus[2]['stream']['channel']['status'],username))
-                if changed == 0:
-                    for username,serverid in cur1:
-                        tStatus = await twitchGet(username)
-                        print("NOT STREAMING: GET STATUS")
+                            if tStatus[2]['stream'] is None:
+                                print("User is no longer streaming. {0}".format(username3))
+                                outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
+                                cursor.execute("DELETE FROM {0} WHERE username LIKE '{1}'".format(tblname3,username3))
+                                for origuser,server1 in cur1:
+                                    for server in self.bot.servers:
+                                        for channel in server.channels:
+                                            for row in cur2:
+                                                for postchanid in row:
+                                                    if str(origuser) == str(username3) and str(server.id) == str(server1) and str(channel.id) == str(postchanid):
+                                                        print("User is no longer streaming, matched username, server id and channel id. Sending message.")
+                                                        await self.bot.send_message(discord.Object(id=postchanid),embed=outMSG)
+                            else:
+                                print("User is still streaming. {0}".format(username3))
+                                tGame = tStatus[2]['stream']['game']
+                                tTitle = tStatus[2]['stream']['channel']['status']
+                                if str(tGame) != str(game) or str(tTitle) != str(title):
+                                    print("User is still streaming and has changed either game or status.")
+                                    outMSG = await twitchFormat('update',tStatus[1],tStatus[2])
+                                    cursor.execute("UPDATE {0} SET game='{1}', title='{2}' WHERE username='{3}';".format(tblname3,tGame,tTitle,username3))
+                                    for origuser,server1 in cur1:
+                                        for server in self.bot.servers:
+                                            for channel in server.channels:
+                                                for row in cur2:
+                                                    for postchanid in row:
+                                                        if str(origuser) == str(username3) and str(server.id) == str(server1) and str(channel.id) == str(postchanid):
+                                                            print("User is still streaming with updated info, matched username, server id and channel id. Sending message.")
+                                                            await self.bot.send_message(discord.Object(id=postchanid),embed=outMSG)
+                    if changed == 0:
+                        print("User is not streaming. {0}".format(username1))
                         if tStatus[2]['stream'] is not None:
-                            outMSG = await twitchFormat('update',tStatus[1],tStatus[2])
-                            print("NOT STREAMING: NOW STREAMING")
-                            cur4.execute("insert into {0} values ('{1}','{2}','{3}');".format(tblname3, username, tStatus[2]['stream']['game'],tStatus[2]['stream']['channel']['status']))
-                            for origuser, serverid in cur1:
+                            print("User is now streaming. {0}".format(username1))
+                            outMSG = twitchFormat('status',tStatus[1],tStatus[2])
+                            cursor.execute("INSERT INTO {0} VALUES ('{1}','{2}','{3}');".format(tblname3,username1,tStatus[2]['stream']['game'],tStatus[2]['stream']['channel']['status']))
+                            for origuser, server1 in cur1:
                                 for server in self.bot.servers:
                                     for channel in server.channels:
                                         for row in cur2:
                                             for postchanid in row:
-                                                if str(server.id) == str(serverid) and str(channel.id) == str(postchanid):
-                                                    print("NOT STREAMING: NOW STREAMING: SEND MESSAGE")
+                                                if str(origuser) == str(username1) and str(server.id) == str(server1) and str(channel.id) == str(postchanid):
+                                                    print("User is now streaming, matched username, server id and channel id. Sending message.")
                                                     await self.bot.send_message(discord.Object(id=postchanid), embed=outMSG)
-                sqldb1.commit()
             except:
                 ReportException()
-                pass
-            print("I'M HERE!!!!!!!!!!!!!!!!!!!!!!")
+                try:
+                    sqldb1.commit()
+                except:
+                    pass
+                break
+            sqldb1.commit()
             await asyncio.sleep(3.5)
 
     @commands.command(pass_context=True)
