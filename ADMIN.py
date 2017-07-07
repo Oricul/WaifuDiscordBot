@@ -32,6 +32,12 @@ class ADMIN():
         await self.bot.change_presence(game=discord.Game(name="{0}".format(ctx.message.content[10:])))
         return
 
+    @commands.command(pass_context=True,hidden=True)
+    @is_owner()
+    async def ping(self,ctx):
+        await self.bot.say("Pong! ({0})".format(datetime.datetime.now()-ctx.message.timestamp))
+        return
+
     @commands.command(pass_context=True, hidden=True)
     @is_owner()
     async def load(self,ctx,extension_name : str):
