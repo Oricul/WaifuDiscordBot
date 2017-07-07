@@ -146,6 +146,7 @@ class Twitch():
                 except:
                     ReportException()
                     try:
+                        print("Closing Database connection")
                         sqldb1.close()
                     except:
                         pass
