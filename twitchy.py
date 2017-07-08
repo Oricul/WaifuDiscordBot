@@ -127,11 +127,11 @@ class Twitch():
     def __init__(self,bot):
         self.bot = bot
         print(SQLSetup())
-        #self.bot.loop.create_task(self.twitchUpdate())
+        self.bot.loop.create_task(self.twitchUpdate())
 
-    async def main(self):
-        print("MAIN TRIGGER")
-        await self.twitchUpdate()
+    #async def main(self):
+        #print("MAIN TRIGGER")
+        #await self.twitchUpdate()
 
     async def twitchUpdate(self):
         print("twitchUPDATE trigger")
