@@ -190,6 +190,7 @@ class Twitch():
                         if tStatus[2]['stream'] is not None:
                             changed = 1
                             outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
+                            print("{0} ||| {1}".format(len(tStatus[2]['stream']['channel']['status']),tStatus[2]['stream']['channel']['status']))
                             cursor.execute("INSERT INTO {0} VALUES ('{1}','{2}','{3}');".format(tblname3,username1,tStatus[2]['stream']['game'],tStatus[2]['stream']['channel']['status']))
                             for origuser, server1 in cur1:
                                 for server in self.bot.servers:
