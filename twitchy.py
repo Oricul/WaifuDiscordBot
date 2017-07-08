@@ -53,7 +53,7 @@ def SQLSetup():
             sqlcmd1 = cur1.execute("create table {0} (channelid BIGINT, adddate DATETIME, addedby VARCHAR(20))".format(tblname2))
         cur1.execute("select count(*) from information_schema.tables where table_name = '{0}' and table_schema = '{1}'".format(tblname3,dbname1))
         if cur1.fetchone()[0] < 1:
-            sqlcmd1 = cur1.execute("create table {0} (username VARCHAR(20), game VARCHAR(60), title VARCHAR(100))".format(tblname3))
+            sqlcmd1 = cur1.execute("create table {0} (username VARCHAR(255), game VARCHAR(255), title VARCHAR(1024))".format(tblname3))
         return "MySQL: Database '{0}' and tables '{1}', '{2}', '{3}'  exist.".format(dbname1,tblname1,tblname2,tblname3)
     except:
         return "MySQL: {0}".format(ReportException())
