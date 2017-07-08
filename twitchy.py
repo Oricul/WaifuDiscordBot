@@ -189,6 +189,7 @@ class Twitch():
                             print("{0} ||| {1}".format(len(tStatus[2]['stream']['channel']['status']),tStatus[2]['stream']['channel']['status']))
                             try:
                                 cursor.execute("INSERT INTO {0} VALUES ('{1}','{2}','{3}');".format(tblname3,username1,tStatus[2]['stream']['game'],tStatus[2]['stream']['channel']['status']))
+                                cur3.execute("SELECT * FROM {0}".format(tblname3))
                             except:
                                 ReportException()
                             for origuser, server1 in cur1:
