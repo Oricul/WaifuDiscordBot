@@ -207,6 +207,7 @@ class Twitch():
                 sqldb1.close()
             else:
                 sqldb1.commit()
+            print("Reached LOOP")
             await asyncio.sleep(3.5)
 
     @commands.command(pass_context=True)
