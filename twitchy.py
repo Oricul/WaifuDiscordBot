@@ -150,8 +150,6 @@ class Twitch():
                         pass
                     break
                 for username1,serverid in cur1:
-                    print("1>> {0}".format(username1))
-                    print("CUR3>> {0}".format(cur3))
                     changed = 0
                     tStatus = await twitchGet(username1)
                     for username3, game, title in cur3:
@@ -187,10 +185,8 @@ class Twitch():
                         if tStatus[2]['stream'] is not None:
                             changed = 1
                             outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
-                            print("{0} ||| {1}".format(len(tStatus[2]['stream']['channel']['status']),tStatus[2]['stream']['channel']['status']))
                             try:
                                 cursor.execute("INSERT INTO {0} VALUES ('{1}','{2}','{3}');".format(tblname3,username1,tStatus[2]['stream']['game'],tStatus[2]['stream']['channel']['status']))
-                                cur3.execute("SELECT * FROM {0}".format(tblname3))
                             except:
                                 ReportException()
                             for origuser, server1 in cur1:
@@ -205,12 +201,11 @@ class Twitch():
                 ReportException()
                 try:
                     sqldb1.commit()
+                    sqldb1.close()
                 except:
                     pass
                 break
-            print("Commit DB")
             sqldb1.commit()
-            print("Close DB")
             sqldb1.close()
             print("SLEEP")
             await asyncio.sleep(3.5)
