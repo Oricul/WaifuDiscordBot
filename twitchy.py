@@ -208,12 +208,10 @@ class Twitch():
                 except:
                     pass
                 break
-            if changed == 0:
-                print("Close DB")
-                sqldb1.close()
-            else:
-                print("Commit DB")
-                sqldb1.commit()
+            print("Commit DB")
+            sqldb1.commit()
+            print("Close DB")
+            sqldb1.close()
             print("SLEEP")
             await asyncio.sleep(3.5)
 
