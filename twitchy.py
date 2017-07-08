@@ -130,11 +130,14 @@ class Twitch():
         #self.bot.loop.create_task(self.twitchUpdate())
 
     async def main(self):
+        print("MAIN TRIGGER")
         await self.twitchUpdate()
 
     async def twitchUpdate(self):
+        print("twitchUPDATE trigger")
         await self.bot.wait_until_ready()
         while not self.bot.is_closed:
+            print("INTO LOOP")
             try:
                 try:
                     sqldb1 = MS.connect(host=sqlHost,user=sqlUser,passwd=sqlPass,db=dbname1)
