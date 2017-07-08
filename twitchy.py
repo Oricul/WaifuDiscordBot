@@ -129,15 +129,9 @@ class Twitch():
         print(SQLSetup())
         self.bot.loop.create_task(self.twitchUpdate())
 
-    #async def main(self):
-        #print("MAIN TRIGGER")
-        #await self.twitchUpdate()
-
     async def twitchUpdate(self):
-        print("twitchUPDATE trigger")
         await self.bot.wait_until_ready()
         while not self.bot.is_closed:
-            print("INTO LOOP")
             try:
                 try:
                     sqldb1 = MS.connect(host=sqlHost,user=sqlUser,passwd=sqlPass,db=dbname1)
@@ -191,7 +185,7 @@ class Twitch():
                             changed = 1
                             outMSG = await twitchFormat('status',tStatus[1],tStatus[2])
                             print("{0} ||| {1}".format(len(tStatus[2]['stream']['channel']['status']),tStatus[2]['stream']['channel']['status']))
-                            cursor.execute("INSERT INTO {0} VALUES ('{1}','{2}','{3}');".format(tblname3,username1,tStatus[2]['stream']['game'],tStatus[2]['stream']['channel']['status']))
+                            print(cursor.execute("INSERT INTO {0} VALUES ('{1}','{2}','{3}');".format(tblname3,username1,tStatus[2]['stream']['game'],tStatus[2]['stream']['channel']['status'])))
                             for origuser, server1 in cur1:
                                 for server in self.bot.servers:
                                     for channel in server.channels:
@@ -211,7 +205,6 @@ class Twitch():
                 sqldb1.close()
             else:
                 sqldb1.commit()
-            print("Reached LOOP")
             await asyncio.sleep(3.5)
 
     @commands.command(pass_context=True)
