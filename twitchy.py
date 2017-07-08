@@ -153,7 +153,6 @@ class Twitch():
                     changed = 0
                     tStatus = await twitchGet(username1)
                     for username3, game, title in cur3:
-                        print("2>> {0}".format(username3))
                         if username1 == username3:
                             changed = 1
                             if tStatus[2]['stream'] is None:
@@ -207,7 +206,6 @@ class Twitch():
                 break
             sqldb1.commit()
             sqldb1.close()
-            print("SLEEP")
             await asyncio.sleep(3.5)
 
     @commands.command(pass_context=True)
