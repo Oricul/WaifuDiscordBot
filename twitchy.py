@@ -151,6 +151,7 @@ class Twitch():
                     break
                 for username1,serverid in cur1:
                     print("1>> {0}".format(username1))
+                    print("CUR3>> {0}".format(cur3))
                     changed = 0
                     tStatus = await twitchGet(username1)
                     for username3, game, title in cur3:
