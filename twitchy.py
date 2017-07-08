@@ -150,9 +150,11 @@ class Twitch():
                         pass
                     break
                 for username1,serverid in cur1:
+                    print("1>> {0}".format(username1))
                     changed = 0
                     tStatus = await twitchGet(username1)
                     for username3, game, title in cur3:
+                        print("2>> {0}".format(username3))
                         if username1 == username3:
                             changed = 1
                             if tStatus[2]['stream'] is None:
