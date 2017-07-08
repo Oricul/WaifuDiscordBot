@@ -209,9 +209,12 @@ class Twitch():
                     pass
                 break
             if changed == 0:
+                print("Close DB")
                 sqldb1.close()
             else:
+                print("Commit DB")
                 sqldb1.commit()
+            print("SLEEP")
             await asyncio.sleep(3.5)
 
     @commands.command(pass_context=True)
