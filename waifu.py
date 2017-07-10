@@ -30,7 +30,11 @@ async def on_ready():
     userMSG = "Users: {0}".format(len(list(bot.get_all_members())))
     url = "{0}".format(discord.utils.oauth_url(bot.user.id))
     urlshort = short('Google',api_key=gToken)
-    oauth = "OAuth URL: {0}".format(urlshort.short(url))
+    try:
+        oauth = "OAuth URL: {0}".format(urlshort.short(url))
+    else Exception as e:
+        print("Google API failure.\nError: {0}".format(e))
+        oauth = "Failed to generated OAuth URL."
     onDIV = '*'
     while len(onDIV) < len(onlineMSG):
         onDIV = onDIV + '*'
