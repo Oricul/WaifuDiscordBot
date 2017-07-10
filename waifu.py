@@ -32,7 +32,7 @@ async def on_ready():
     urlshort = short('Google',api_key=gToken)
     try:
         oauth = "OAuth URL: {0}".format(urlshort.short(url))
-    else Exception as e:
+    except Exception as e:
         print("Google API failure.\nError: {0}".format(e))
         oauth = "Failed to generated OAuth URL."
     onDIV = '*'
