@@ -53,6 +53,7 @@ class ADMIN():
             msg = await self.bot.send_message(ctx.message.channel, embed=readysend)
             return
         readysend = discord.Embed(title="\U00002705 MODULE LOADED: {0}".format(extension_name),colour=0x00FF00)
+        print("{0} loaded module: '{1}'.".format(ctx.message.author.name,extension_name))
         msg = await self.bot.send_message(ctx.message.channel, embed=readysend)
 
     @commands.command(pass_context=True, hidden=True)
@@ -61,6 +62,7 @@ class ADMIN():
         'Unload an extension/category.'
         self.bot.unload_extension(extension_name)
         readysend = discord.Embed(title="\U00002705 MODULE UNLOADED: {0}".format(extension_name),colour=0x00FF00)
+        print("{0} unloaded module: '{1}'.".format(ctx.message.author.name, extension_name))
         msg = await self.bot.send_message(ctx.message.channel, embed=readysend)
 
     @commands.command(pass_context=True, hidden=True)
@@ -75,6 +77,7 @@ class ADMIN():
             msg = await self.bot.send_message(ctx.message.channel, embed=readysend)
             return
         readysend = discord.Embed(title="\U00002705 MODULE RELOADED: {0}".format(extension_name),colour=0x00FF00)
+        print("{0} reloaded module: '{1}'.".format(ctx.message.author.name, extension_name))
         msg = await self.bot.send_message(ctx.message.channel, embed=readysend)
 
     @commands.command(pass_context=True, hidden=True)
