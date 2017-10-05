@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Ori.SelfBot/.idea/Ori.SelfBot.iml" filepath="$PROJECT_DIR$/../Ori.SelfBot/.idea/Ori.SelfBot.iml" />
+      <module fileurl="file://$USER_HOME$/Documents/GitHub/SCBot/.idea/SCBot.iml" filepath="$USER_HOME$/Documents/GitHub/SCBot/.idea/SCBot.iml" />
+      <module fileurl="file://$USER_HOME$/Documents/GitHub/SCoverdrive/.idea/SCoverdrive.iml" filepath="$USER_HOME$/Documents/GitHub/SCoverdrive/.idea/SCoverdrive.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../UthHerald/.idea/UthHerald.iml" filepath="$PROJECT_DIR$/../UthHerald/.idea/UthHerald.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/WaifuDiscordBot.iml" filepath="$PROJECT_DIR$/.idea/WaifuDiscordBot.iml" />
+    </modules>
+  </component>
+</project>
